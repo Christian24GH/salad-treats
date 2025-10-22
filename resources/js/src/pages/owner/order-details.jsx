@@ -1,15 +1,55 @@
 import HomeLayout from "@/layout/HomeLayout"
 import { ChevronLeft, MapPin, Salad } from "lucide-react"
 import { Link, router } from "@inertiajs/react"
+import { useState } from "react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
-
+import axios from "../../../bootstrap"
 export default function OrderDetails({order}){
-
-    const AcceptOrder = () => {
-        toast.success('Order moved to tracker', {position:"top-center"})
+    const [note, setNote] = useState("")
+    
+    const AcceptOrder = async () => {
+        console.log('Clicked')
+        const payload = {
+            'uuid': order?.uuid,
+        }
+        await axios.post('/owner/orders/approve', payload)
+            .then(()=>{
+                toast.success('Order moved to tracker', {position:"top-center"})
+                router.visit('/owner/orders') //navigate
+            })
     }
+
+    const RejectOrder = async () => {
+        try {
+            const payload = {
+                uuid: order?.uuid,
+                note: note.trim(),
+            }
+
+            await axios.post("/owner/orders/reject", payload)
+
+            toast.success("Order rejected", { position: "top-center" })
+            router.visit("/owner/orders") // navigate back
+        } catch (err) {
+            console.error(err)
+            toast.error("Failed to reject order", { position: "top-center" })
+        }
+    }
+
 
     return (
         <>
@@ -122,8 +162,59 @@ export default function OrderDetails({order}){
                     </div>
                 </div>
                 <Separator/>
-                <div className="w-full flex justify-end p-4">
-                    <Button onClick={AcceptOrder} className="min-w-40 min-h-15 bg-[var(--forest-green)] text-xl lato-regular">Accept</Button>
+                <div className="w-full flex justify-end p-4 gap-5">
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button className="min-w-40 min-h-15 bg-red-600 text-xl lato-regular">Reject</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+
+                             <div className="mt-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Reason / Notes
+                                </label>
+                                <Input
+                                    type="text"
+                                    placeholder="Enter reason for rejection..."
+                                    value={note}
+                                    onChange={(e) => setNote(e.target.value)}
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className={"text-xl lato-regular"}>Cancel</AlertDialogCancel>
+                                <AlertDialogAction className={"bg-red-600  text-xl lato-regular"} onClick={RejectOrder}>Reject</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                    
+                    
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button className="min-w-40 min-h-15 bg-[var(--forest-green)] text-xl lato-regular">Accept</Button>
+                        </AlertDialogTrigger>
+
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone.
+                            </AlertDialogDescription>
+                            
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className={"text-xl lato-regular"}>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={AcceptOrder} className={"bg-[var(--forest-green)] text-xl lato-regular"}>Accept</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
             </div>
             

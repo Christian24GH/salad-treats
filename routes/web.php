@@ -45,6 +45,8 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
         Route::prefix('/orders')->group(function () {
             Route::get('/', [OrderController::class, 'orders'])->name('owner.orders');
             Route::get('/{order_uuid}', [OrderController::class, 'order_details'])->name('owner.orders.show');
+            Route::post('/approve', [OrderController::class, 'approve_order'])->name('owner.orders.approve');
+            Route::post('/reject', [OrderController::class, 'reject_order'])->name('owner.orders.reject');
         });
         
     });
