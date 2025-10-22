@@ -5,7 +5,7 @@ import { usePage } from '@inertiajs/react'
 
 export default function HomeLayout({ children }){
     const { auth } = usePage().props
-    console.log(auth)
+    
     //sets csrf token so all request doest get rejected by laravel e.g 419 error
     useEffect(() => {
         axios.get("/sanctum/csrf-cookie");
