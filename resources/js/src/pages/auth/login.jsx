@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/login-form"
-import FormLayout from '../../layout/FormLayout'
+import AuthLayout from '../../layout/AuthLayout'
 
 export default function Login() {
   return (
@@ -12,4 +12,4 @@ export default function Login() {
   );
 }
 
-Login.layout = page => <FormLayout children={page}/>
+Login.layout = page => <AuthLayout children={page}/>

@@ -1,5 +1,5 @@
 import { SignupForm } from "@/components/signup-form"
-import FormLayout from '../../layout/FormLayout'
+import AuthLayout from '../../layout/AuthLayout'
 
 export default function SignupPage() {
   return (
@@ -13,4 +13,4 @@ export default function SignupPage() {
   );
 }
 
-SignupPage.layout = page => <FormLayout children={page}/>
+SignupPage.layout = page => <AuthLayout children={page}/>
