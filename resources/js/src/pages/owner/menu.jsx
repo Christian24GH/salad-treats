@@ -12,12 +12,19 @@ import {
 import { Link } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
 
-export default function Menu({menu = []}){
+export default function Menu({products = []}){
+    console.log(products)
     return (
         <>
-            <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)]">Menu Items</div>
+            <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)] flex justify-between items-center">
+                Menu Items
+
+                <Link href="/owner/menu/create" asChild>
+                    <Button className={"bg-[var(--forest-green)]"}>Create Menu Item</Button>
+                </Link>
+            </div>
             <Separator/>
-            {menu?.length == 0 ? (
+            {products?.length == 0 ? (
                 <Empty>
                     <EmptyHeader className={"scale-120"}>
                         <EmptyMedia variant="icon">
@@ -27,27 +34,56 @@ export default function Menu({menu = []}){
                         <EmptyDescription>No Menu Items found</EmptyDescription>
                     </EmptyHeader>
                     <EmptyContent className={"scale-120"}>
-                        <Button className={"bg-[var(--forest-green)]"}>Create Menu Item</Button>
+                        <Link href="/owner/menu/create" asChild>
+                            <Button className={"bg-[var(--forest-green)]"}>Create Menu Item</Button>
+                        </Link>
                     </EmptyContent>
                 </Empty>
                 
             ) : (
-                menu.map((record, index) => (
-                    <div key={`No ${index}`} className="w-full min-h-10 flex item-center text-[var(--forest-green)] bg-[var(--mint-cream)] rounded-sm my-3">
-                        <div className="flex items-center p-2 text-2xl font-bold mr-4">{index+1}</div>
-                        <div className="flex flex-col py-2 flex-2">
-                            <p className="font-bold text-lg">Customer Name: <span className="font-normal">{record?.customer_name}</span></p>
-                            <p className="font-bold text-lg">Order ID: <span className="font-normal">{record?.order_uuid}</span></p>
+                <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {products.map((record, index) => (
+                        <div key={index} className="bg-white shadow-lg rounded-md hover:shadow-xl transition">
+                            <img
+                                src={record.image_url ? record.image_url : '/placeholder.jpg'}
+                                alt={record.product_name}
+                                className="w-full h-48 object-cover"
+                            />
+
+                            {/* Content */}
+                            <div className="p-4 h-full">
+                                <div>
+                                    <div className="flex justify-between items-center">
+                                        <h3 className="text-xl font-semibold text-[var(--dark-green)] lato-regular">
+                                            {record.product_name}
+                                        </h3>
+                                    </div>
+                                    <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+                                        {record.description}
+                                    </p>
+
+                                    <Separator className={"bg-black my-4"}/>
+                                    <p className="text-lg text-[var(--dark-green)]">
+                                        ₱ {parseFloat(record.price).toFixed(2)}
+                                    </p>
+                                    
+                                </div>
+
+                                {/* Actions */}
+                                <div className="mt-4 flex flex-col gap-2">
+                                    <Button className={"bg-[var(--forest-green)] !hover:bg-[var(--forest-green)]"}>
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        className={"bg-gray-400 !hover:bg-gray-400"}
+                                    >
+                                        Archive
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex items-center me-2">
-                            <Link asChild>
-                                <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
-                                    View Full Details
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                ))
+                    ))}
+                </div>
             )}
         </>
     )

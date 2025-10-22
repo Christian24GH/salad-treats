@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TrackerController;
 use App\Http\Middleware\EnsureAuthenticated;
@@ -53,6 +54,20 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
         Route::prefix('/tracker')->group(function () {
             Route::get('/', [TrackerController::class, 'tracker'])->name('owner.tracker');
             Route::get('/{order_uuid}', [TrackerController::class, 'tracker_details'])->name('owner.tracker.show');
+        });
+
+        Route::prefix('/menu')->group(function () {
+            // Displays the list of all menu items
+            Route::get('/', [MenuController::class, 'index'])->name('owner.menu');
+
+            // Shows the form for creating a new menu item
+            Route::get('/create', [MenuController::class, 'create'])->name('owner.menu.create');
+
+            // Handles the POST request to save a new menu item
+            Route::post('/store', [MenuController::class, 'store'])->name('owner.menu.store');
+            
+            // Displays details of a single menu item by UUID
+            Route::get('/{product_uuid}', [MenuController::class, 'show'])->name('owner.menu.show');
         });
     });
 });
