@@ -52,5 +52,9 @@ class FortifyServiceProvider extends ServiceProvider
                 return redirect('/login'); // Redirect user to /login after logout
             }
         });
+        
+        Fortify::verifyEmailView(function () {
+            return inertia('auth/verify-email');
+        });
     }
 }

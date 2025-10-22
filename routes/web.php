@@ -6,14 +6,33 @@ use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Middleware\EnsureAuthenticated;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+
+Route::get('/sanctum/csrf-cookie', fn()=>response()->noContent());
+
 
 //ONLY RENDERS PAGES, POST LOGIN ROUTE IS HANDLED BY LARAVEL FORTIFY
 Route::get('/login', [AuthPageController::class, 'login'])->name('login');
 Route::get('/register', [AuthPageController::class, 'register'])->name('register');
+Route::get('/email/verify', function () {
+    return inertia('auth/verify-email');
+})->middleware('auth')->name('verification.notice');
 
-Route::get('/sanctum/csrf-cookie', fn()=>response()->noContent());
 
-Route::middleware(EnsureAuthenticated::class)->group(function(){
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('status', 'verification-link-sent');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
     Route::get('/home', [AuthPageController::class, 'home'])->name('home');
     Route::post('/make-account', [AuthController::class, 'store'])->name('register');
     
