@@ -12,12 +12,12 @@ import {
 import { Link } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
 
-export default function Orders({orders = []}){
+export default function Tracker({tracker = []}){
     return (
         <>
-            <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)]">No. Orders</div>
+            <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)]">Tracker</div>
             <Separator/>
-            {!orders?.length == 0 ? (
+            {!tracker?.length == 0 ? (
                 <Empty>
                     <EmptyHeader className={"scale-120"}>
                         <EmptyMedia variant="icon">
@@ -26,14 +26,9 @@ export default function Orders({orders = []}){
                         <EmptyTitle>No Orders</EmptyTitle>
                         <EmptyDescription>No orders found</EmptyDescription>
                     </EmptyHeader>
-                    {/**
-                        <EmptyContent className={"scale-120"}>
-                            <Button className={"bg-[var(--forest-green)]"}>Order Now</Button>
-                        </EmptyContent>
-                     */}
                 </Empty>
             ) : (
-                orders.map((record, index) => (
+                tracker.map((record, index) => (
                     <div key={`No ${index}`} className="w-full min-h-10 flex item-center text-[var(--forest-green)] bg-[var(--mint-cream)] rounded-sm my-3">
                         <div className="flex items-center p-2 text-2xl font-bold mr-4">{index+1}</div>
                         <div className="flex flex-col py-2 flex-2">
@@ -69,4 +64,4 @@ export default function Orders({orders = []}){
         </>
     )
 }
-Orders.layout = page => <HomeLayout children={page}/>
+Tracker.layout = page => <HomeLayout children={page}/>

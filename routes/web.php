@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TrackerController;
 use App\Http\Middleware\EnsureAuthenticated;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -48,6 +49,10 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::post('/approve', [OrderController::class, 'approve_order'])->name('owner.orders.approve');
             Route::post('/reject', [OrderController::class, 'reject_order'])->name('owner.orders.reject');
         });
-        
+
+        Route::prefix('/tracker')->group(function () {
+            Route::get('/', [TrackerController::class, 'tracker'])->name('owner.tracker');
+            Route::get('/{order_uuid}', [TrackerController::class, 'tracker_details'])->name('owner.tracker.show');
+        });
     });
 });
