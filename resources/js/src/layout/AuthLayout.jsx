@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import axios from "axios";
 
 const FormLayout = ({children}) => {
+
+    //sets csrf token so all request doest get rejected by laravel e.g 419 error
     useEffect(() => {
         axios.get("/sanctum/csrf-cookie");
     }, []);

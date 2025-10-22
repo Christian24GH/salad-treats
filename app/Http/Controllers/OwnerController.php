@@ -8,16 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class OwnerController extends Controller
 {
-    public function dashboard()
+    public function orders()
     {
-        $user = Auth::user();
-        if($user->role !== 'Owner'){
-            abort(403, 'Unauthorized action.');
-            return redirect()->route('login');
-        }
-
-        return inertia('owner/dashboard', [
-            'user' => $user
-        ]);
+        $this->authorize('Owner');
+        return inertia('owner/orders');
     }
 }

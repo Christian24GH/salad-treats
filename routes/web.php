@@ -22,8 +22,9 @@ Route::get('/sanctum/csrf-cookie', function () {
 //DASHBOARDS
 Route::prefix('/customer')->group(function () {
     Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
+    
 });
 
 Route::prefix('/owner')->group(function () {
-    Route::get('/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
+    Route::get('/orders', [OwnerController::class, 'orders'])->name('owner.orders');
 });

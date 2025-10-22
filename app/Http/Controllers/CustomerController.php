@@ -9,15 +9,12 @@ class CustomerController extends Controller
 {
     public function dashboard()
     {
-        $user = Auth::user();
-        if($user->role !== 'Customer'){
-            abort(403, 'Unauthorized action.');
-            return redirect()->route('login');
-        }
+        $this->authorize('Customer');
+        return inertia('customer/dashboard');
+    }
 
-        $user = Auth::user();
-        return inertia('customer/dashboard', [
-            'user' => $user
-        ]);
+    public function orders(){
+        $this->authorize('Customer');
+        return inertia('customer/orders');
     }
 }
