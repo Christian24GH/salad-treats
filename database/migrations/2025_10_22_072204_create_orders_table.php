@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->uuid('order_uuid')->unique()->index();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->date('order_date');
             $table->time('order_time');
             $table->timestamps();
             $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['pending', 'on delivery', 'delivered'])->default('pending')->index();
+            $table->enum('status', ['Pending', 'Cancelled', 'Rejected', 'Accepted', 'On Delivery', 'Delivered'])->default('Pending')->index();
         });
     }
 
