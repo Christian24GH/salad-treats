@@ -4,7 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\OrderController;
 use App\Http\Middleware\EnsureAuthenticated;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -42,6 +42,10 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
     });
     
     Route::prefix('/owner')->group(function () {
-        Route::get('/orders', [OwnerController::class, 'orders'])->name('owner.orders');
+        Route::prefix('/orders')->group(function () {
+            Route::get('/', [OrderController::class, 'orders'])->name('owner.orders');
+            Route::get('/{order_uuid}', [OrderController::class, 'order_details'])->name('owner.orders.show');
+        });
+        
     });
 });

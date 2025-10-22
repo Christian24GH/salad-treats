@@ -2,7 +2,7 @@ import { useEffect} from "react";
 import axios from "axios";
 import MenuBarNavigation from "@/components/admin/navigation-menu";
 import { usePage } from '@inertiajs/react'
-
+import { Toaster } from "sonner";
 export default function HomeLayout({ children }){
     const { auth } = usePage().props
     
@@ -13,6 +13,7 @@ export default function HomeLayout({ children }){
     
     return (
         <>
+            <Toaster richColors/>
             <div className="w-full h-full">
                 <header className="h-[50px] md:h-[60px] w-full bg-[var(--forest-green)] flex flex-wrap md:flex-nowrap items-center justify-between px-3 md:px-6 fixed top-0 z-50">
                     <div className="flex items-center gap-x-2 md:gap-x-3">
@@ -37,7 +38,7 @@ export default function HomeLayout({ children }){
                         <MenuBarNavigation mobile />
                     </div>
                 </header>
-                <div className="mt-[50px] md:mt-[60px] mx-10">
+                <div className="my-[50px] md:my-[60px] mx-10">
                     {children}
                 </div>
             </div>
