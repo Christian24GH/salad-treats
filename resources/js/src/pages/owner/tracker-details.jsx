@@ -67,7 +67,7 @@ export default function TrackerDetails({ order, delivery }){
             </div>
             <Separator/>
 
-            <div className="w-full h-fit flex flex-col items-center px-20 py-20">
+            <div className="w-full h-fit flex flex-col items-center sm:px-0 md:px-4 lg:px-20 py-20">
                 <h1 className="text-3xl lato-bold-italic text-[var(--dark-green)] text-center">Order Status</h1>
                 <div className="flex relative w-full items-center min-h-80">
                     <Progress value={progress} className={"w-full"}/>
@@ -77,18 +77,18 @@ export default function TrackerDetails({ order, delivery }){
                             className="rounded-full size-16 bg-[var(--forest-green)] flex items-center justify-center">
                             <FaCheck className="size-10 text-white" />
                         </Button>
-                        <h1 className="text-center text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
+                        <h1 className="text-center sm:text-sm md:text-md lg:text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
                             Confirmed
                         </h1>
                     </div>
 
-                    <div className="absolute left-[25%] top-1/2 -translate-y-1/2 flex flex-col items-center z-10">
+                    <div className="absolute left-[25%] -translate-x-1/5 top-1/2 -translate-y-1/2 flex flex-col items-center z-10">
                         <Button 
                             onClick={Preparing}
                             className="rounded-full size-16 bg-[var(--forest-green)] flex items-center justify-center">
                             <TbSaladFilled className="size-10 text-white" />
                         </Button>
-                        <h1 className="text-center text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
+                        <h1 className="text-center sm:text-sm md:text-md lg:text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
                             Preparing
                         </h1>
                     </div>
@@ -99,18 +99,18 @@ export default function TrackerDetails({ order, delivery }){
                             className="rounded-full size-16 bg-[var(--forest-green)] flex items-center justify-center">
                             <FaBox className="size-10 text-white" />
                         </Button>
-                        <h1 className="text-center text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
+                        <h1 className="text-center sm:text-sm md:text-md lg:text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
                             Packing
                         </h1>
                     </div>
 
-                    <div className="absolute right-[25%] top-1/2 -translate-y-1/2 flex flex-col items-center z-10">
+                    <div className="absolute right-[25%] top-1/2 translate-x-1/5 -translate-y-1/2 flex flex-col items-center z-10">
                         <Button 
                             onClick={Ready}
                             className="rounded-full size-16 bg-[var(--forest-green)] flex items-center justify-center">
                             <BsFillBagCheckFill className="size-10 text-white" />
                         </Button>
-                        <h1 className="text-center text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
+                        <h1 className="text-center sm:text-sm md:text-md lg:text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
                             Ready
                         </h1>
                     </div>
@@ -121,7 +121,7 @@ export default function TrackerDetails({ order, delivery }){
                             className="rounded-full size-16 bg-[var(--forest-green)] flex items-center justify-center">
                             <TiHome className="size-10 text-white" />
                         </Button>
-                        <h1 className="text-center text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
+                        <h1 className="text-center sm:text-sm md:text-md lg:text-xl lato-bold mt-2 text-[var(--dark-green)] absolute -bottom-15">
                             Delivered
                         </h1>
                     </div>

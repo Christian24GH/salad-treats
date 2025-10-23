@@ -3,7 +3,8 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerOrderController;
+use App\Http\Controllers\CustomerProductController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
@@ -41,7 +42,15 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
     
     //DASHBOARDS
     Route::prefix('/customer')->group(function () {
-        Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');    
+        Route::prefix('/orders')->group(function () {
+            Route::get('/', [CustomerOrderController::class, 'orders'])->name('customer.orders');
+            Route::get('/create', [CustomerOrderController::class, 'create_order'])->name('customer.order.create');
+        });   
+        
+        Route::prefix('/menu')->group(function () {
+            Route::get('/', [CustomerProductController::class, 'products'])->name('customer.products');
+            Route::get('/product/{id}', [CustomerProductController::class, 'product_details'])->name('customer.product.details');
+        });
     });
     
     

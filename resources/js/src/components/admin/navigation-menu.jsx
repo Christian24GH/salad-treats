@@ -25,7 +25,6 @@ export default function MenuBarNavigation({ mobile = false }) {
   const owner_nav = [
     { href: "/owner/orders", label: "Orders" },
     { href: "/owner/tracker", label: "Tracker" },
-    { href: "/owner/inventory", label: "Inventory" },
     { href: "/owner/menu", label: "Menu" },
     { href: "/owner/feedback", label: "Feedback" },
     { href: "/owner/account", label: "Account" },
@@ -33,8 +32,6 @@ export default function MenuBarNavigation({ mobile = false }) {
 
   const customer_nav = [
     { href: "/customer/orders", label: "Orders" },
-    { href: "/customer/tracker", label: "Tracker" },
-    { href: "/customer/inventory", label: "Inventory" },
     { href: "/customer/menu", label: "Menu" },
     { href: "/customer/feedback", label: "Feedback" },
     { href: "/customer/account", label: "Account" },
