@@ -18,8 +18,10 @@ class CustomerProductController extends Controller
     public function product_details($id){
         $this->authorize('Customer');
         $product = Product::find($id);
+        $extras = Product::where('type', 'Extras')->get();
         return inertia('customer/product-details', [
-            'product' => $product
+            'product' => $product,
+            'extras' => $extras
         ]);
     }
     
