@@ -46,6 +46,7 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::get('/', [CustomerOrderController::class, 'orders'])->name('customer.orders');
             Route::get('/create', [CustomerOrderController::class, 'create_order'])->name('customer.order.create');
             Route::post('/place', [CustomerOrderController::class, 'place_order'])->name('customer.order.place');
+            Route::post('/cancel/{order_uuid}', [CustomerOrderController::class, 'cancel_order'])->name('customer.order.cancel');
         });   
         
         Route::prefix('/menu')->group(function () {

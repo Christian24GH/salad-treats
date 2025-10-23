@@ -15,7 +15,14 @@ class CustomerOrderController extends Controller
 {
     public function orders(){
         $this->authorize('Customer');
-        return inertia('customer/orders');
+        $user = Auth::id();
+        $orders = Order::where('user_id', $user)
+            ->with('orderDetails.product')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return inertia('customer/orders', [
+            'orders' => $orders
+        ]);
     }
 
     public function create_order(){
@@ -54,7 +61,7 @@ class CustomerOrderController extends Controller
 
         DB::beginTransaction();
         try {
-            // 1. Create the order
+            
             $order = Order::create([
                 'order_uuid' => Str::uuid(),
                 'user_id' => Auth::id(),
@@ -75,7 +82,6 @@ class CustomerOrderController extends Controller
                 $itemTotal = $product->price * $quantity;
                 $total += $itemTotal;
 
-                // Create main product detail
                 $orderDetail = OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
@@ -103,7 +109,6 @@ class CustomerOrderController extends Controller
                 }
             }
 
-            // 4. Update total price after calculating all items
             $order->update(['total_price' => $total]);
 
             DB::commit();
@@ -122,5 +127,27 @@ class CustomerOrderController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function cancel_order($order_uuid)
+    {
+        $this->authorize('Customer');
+
+        $order = Order::where('order_uuid', $order_uuid)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        if ($order->status !== 'Pending') {
+            return response()->json([
+                'message' => 'Only pending orders can be cancelled.'
+            ], 400);
+        }
+
+        $order->status = 'Cancelled';
+        $order->save();
+        $order->delete();
+        return response()->json([
+            'message' => 'Order cancelled successfully.'
+        ], 201);
     }
 }
