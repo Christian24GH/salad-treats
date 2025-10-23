@@ -13,7 +13,27 @@ use App\Http\Middleware\EnsureAuthenticated;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
-Route::get('/sanctum/csrf-cookie', fn()=>response()->noContent());
+Route::get('/sanctum/csrf-cookie', function () {
+    // Return an empty 204 response but set the XSRF-TOKEN cookie so
+    // front-end clients (axios/fetch) can read it and include it in
+    // subsequent requests to avoid 419 CSRF token mismatch errors.
+    $token = csrf_token();
+
+    // Create a session cookie (minutes = 0) — not HttpOnly so JS can read it
+    $cookie = cookie(
+        'XSRF-TOKEN',          // name
+        urlencode($token),     // value (urlencoded to match Laravel's default)
+        0,                     // minutes (0 = session)
+        '/',                   // path
+        config('session.domain'),
+        config('session.secure', false),
+        false,                 // httpOnly (must be false so JS can read)
+        false,                 // raw
+        config('session.same_site', null)
+    );
+
+    return response()->noContent()->withCookie($cookie);
+});
 
 
 //ONLY RENDERS PAGES, POST LOGIN ROUTE IS HANDLED BY LARAVEL FORTIFY
