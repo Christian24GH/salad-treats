@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TrackerController;
@@ -43,6 +44,7 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
         Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');    
     });
     
+    
     Route::prefix('/owner')->group(function () {
         Route::prefix('/orders')->group(function () {
             Route::get('/', [OrderController::class, 'orders'])->name('owner.orders');
@@ -56,6 +58,11 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::get('/{order_uuid}', [TrackerController::class, 'tracker_details'])->name('owner.tracker.show');
         });
 
+        Route::prefix('/feedback')->group(function () {
+            Route::get('/', [FeedbackController::class, 'feedback'])->name('owner.feedback');
+            Route::get('/{order_uuid}', [FeedbackController::class, 'feedback_details'])->name('owner.feedback.show');
+        });
+
         Route::prefix('/menu')->group(function () {
             // Displays the list of all menu items
             Route::get('/', [MenuController::class, 'index'])->name('owner.menu');
@@ -67,7 +74,7 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::post('/store', [MenuController::class, 'store'])->name('owner.menu.store');
             
             Route::get('/edit/{id}', [MenuController::class, 'edit'])->name('owner.menu.edit');
-            
+
             Route::post('/update/{id}', [MenuController::class, 'update'])->name('owner.menu.edit');
             // Displays details of a single menu item by UUID
             Route::get('/{product_uuid}', [MenuController::class, 'show'])->name('owner.menu.show');

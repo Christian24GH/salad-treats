@@ -41,7 +41,7 @@ export default function Menu({products = []}){
                 </Empty>
                 
             ) : (
-                <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     {products.map((record, index) => (
                         <div key={index} className="bg-white shadow-lg rounded-md hover:shadow-xl transition">
                             <img

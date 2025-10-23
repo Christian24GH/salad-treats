@@ -53,7 +53,7 @@ export default function Tracker({tracker = []}){
                     <p className="font-bold text-lg">Order ID: <span className="font-normal">12345</span></p>
                 </div>
                 <div className="flex items-center me-2">
-                    <Link href="/owner/orders/1" asChild>
+                    <Link href="/owner/tracker/1" asChild>
                         <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
                             View Full Details
                         </Button>

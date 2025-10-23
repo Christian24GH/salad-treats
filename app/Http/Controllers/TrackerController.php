@@ -11,4 +11,10 @@ class TrackerController extends Controller
         $this->authorize('Owner');
         return inertia('owner/tracker');
     }
+
+    public function tracker_details($id)
+    {
+        $this->authorize('Owner');
+        return inertia('owner/tracker-details');
+    }
 }
