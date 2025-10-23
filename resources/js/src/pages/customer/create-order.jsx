@@ -22,12 +22,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useForm } from "react-hook-form"
-import { usePage } from "@inertiajs/react"
+import { usePage, router } from "@inertiajs/react"
+import { toast } from "sonner"
 import axios from "../../../bootstrap"
 export default function CreateOrder() {
     const { auth } = usePage().props
-    console.log(auth)
-    const { cart, computeItemTotal, computeCartTotal, setCartOpen } = useCart()
+    //console.log(auth)
+    const { cart, computeItemTotal, computeCartTotal, setCartOpen, clearCart } = useCart()
     const [loading, setLoading] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
 
@@ -53,8 +54,6 @@ export default function CreateOrder() {
 
     const onSubmit = async (data) => {
         setLoading(true)
-
-        // Combine cart + user data
         const orderData = {
             ...data,
             items: cart.map((item) => ({
@@ -68,16 +67,20 @@ export default function CreateOrder() {
             })),
         }
 
-        console.log("Submitting order:", orderData)
+        //console.log("Submitting order:", orderData)
 
         // Simulate API call
         await axios.post('/customer/orders/place', orderData)
-            .then(()=>{
-                toast.success("Order submitted successfully")
-                setOpenDialog(false)
-                //clear cart
-                //navigate to orders
-                reset()
+            .then((response)=>{
+                if(response.status == 201){
+                    toast.success("Order submitted successfully")
+                    setOpenDialog(false)
+                    //clear cart
+                    clearCart()
+                    setOpenDialog(false)
+                    reset()
+                    router.visit('/customer/orders')
+                }
             })
             .catch((error)=>{
                 console.log(error)

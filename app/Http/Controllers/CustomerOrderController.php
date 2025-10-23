@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CustomerOrderController extends Controller
 {
@@ -24,9 +26,12 @@ class CustomerOrderController extends Controller
         ]);
     }
 
-    public function place_order(Request $request){
-        // should accept
+    public function place_order(Request $request)
+    {
+        // Authorize only customers
         $this->authorize('Customer');
+
+        // Validate input
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'contact_number' => [
@@ -49,11 +54,67 @@ class CustomerOrderController extends Controller
 
         DB::beginTransaction();
         try {
-            
+            // 1. Create the order
+            $order = Order::create([
+                'order_uuid' => Str::uuid(),
+                'user_id' => Auth::id(),
+                'customer_name' => $validated['customer_name'],
+                'contact_number' => $validated['contact_number'],
+                'delivery_address' => $validated['delivery_address'],
+                'delivery_time' => $validated['delivery_time'],
+                'delivery_instructions' => $validated['delivery_instructions'] ?? null,
+                'total_price' => 0, // placeholder, will update later
+                'status' => 'Pending',
+            ]);
+
+            $total = 0;
+
+            foreach ($validated['items'] as $item) {
+                $product = Product::findOrFail($item['product_id']);
+                $quantity = $item['quantity'];
+                $itemTotal = $product->price * $quantity;
+                $total += $itemTotal;
+
+                // Create main product detail
+                $orderDetail = OrderDetail::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'quantity' => $quantity,
+                    'price' => $product->price,
+                    'instructions' => $item['instructions'] ?? null,
+                ]);
+
+                // 3. If there are extras, include them as separate order details
+                if (!empty($item['extras'])) {
+                    foreach ($item['extras'] as $extra) {
+                        $extraProduct = Product::findOrFail($extra['product_id']);
+                        $extraQty = $extra['quantity'];
+                        $extraTotal = $extraProduct->price * $extraQty;
+                        $total += $extraTotal;
+
+                        OrderDetail::create([
+                            'order_id' => $order->id,
+                            'product_id' => $extraProduct->id,
+                            'quantity' => $extraQty,
+                            'price' => $extraProduct->price,
+                            'instructions' => 'Extra for product #' . $product->id,
+                        ]);
+                    }
+                }
+            }
+
+            // 4. Update total price after calculating all items
+            $order->update(['total_price' => $total]);
 
             DB::commit();
 
-            return response()->json(['message' => 'Order placed successfully'], 200);
+            return response()->json([
+                'message' => 'Order placed successfully',
+                'order_id' => $order->id,
+                'order_uuid' => $order->order_uuid,
+                'total' => $total
+            ], 201);
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

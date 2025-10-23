@@ -78,16 +78,22 @@ export default function MenuBarNavigation({ mobile = false }) {
               >
               Account
             </Link>
-            <button
-              onClick={() => {
-                setCartOpen(true);
-                setOpen(false);
-              }}
-              className="flex items-center gap-2 text-white text-base lato-regular-italic px-4 py-2 hover:bg-green-700 transition w-full text-left"
-            >
-              <ShoppingCart size={18} />
-              Cart
-            </button>
+            {
+              auth?.user?.role === "Customer" && (
+                <button
+                  onClick={() => {
+                    setCartOpen(true);
+                    setOpen(false);
+                  }}
+                  className="flex items-center gap-2 text-white text-base lato-regular-italic px-4 py-2 hover:bg-green-700 transition w-full text-left"
+                >
+                  <ShoppingCart size={18} />
+                  Cart
+                </button>
+              )
+              
+            }
+            
 
             <div className="border-t border-green-700 my-1" />
 
@@ -155,15 +161,19 @@ export default function MenuBarNavigation({ mobile = false }) {
         </NavigationMenuItem>
 
         {/* Cart button */}
-        <NavigationMenuItem>
-          <Button
-            onClick={() => setCartOpen(true)}
-            variant="ghost"
-            className="bg-[var(--soft-lime)] text-white hover:bg-white hover:text-[var(--forest-green)] text-lg lato-regular-italic flex items-center rounded-full aspect-square size-fit justify-center"
-          >
-            <ShoppingCart className="mx-auto -translate-x-[5%] !size-8" />
-          </Button>
-        </NavigationMenuItem>        
+        {
+          auth?.user?.role === "Customer" && (
+          <NavigationMenuItem>
+            <Button
+              onClick={() => setCartOpen(true)}
+              variant="ghost"
+              className="bg-[var(--soft-lime)] text-white hover:bg-white hover:text-[var(--forest-green)] text-lg lato-regular-italic flex items-center rounded-full aspect-square size-fit justify-center"
+            >
+              <ShoppingCart className="mx-auto -translate-x-[5%] !size-8" />
+            </Button>
+          </NavigationMenuItem>        
+          )
+        }
       </NavigationMenuList>
     </NavigationMenu>
   );
