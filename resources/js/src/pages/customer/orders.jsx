@@ -38,7 +38,6 @@ export default function Orders({orders = []}){
                             <Button className={"bg-[var(--forest-green)]"}>Order Now</Button>
                         </Link>
                     </EmptyContent>
-                     
                 </Empty>
             ) : (
                 orders.map((record, index) => (

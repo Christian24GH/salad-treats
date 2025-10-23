@@ -45,6 +45,7 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
         Route::prefix('/orders')->group(function () {
             Route::get('/', [CustomerOrderController::class, 'orders'])->name('customer.orders');
             Route::get('/create', [CustomerOrderController::class, 'create_order'])->name('customer.order.create');
+            Route::post('/place', [CustomerOrderController::class, 'place_order'])->name('customer.order.place');
         });   
         
         Route::prefix('/menu')->group(function () {

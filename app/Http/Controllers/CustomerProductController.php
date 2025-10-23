@@ -23,6 +23,5 @@ class CustomerProductController extends Controller
             'product' => $product,
             'extras' => $extras
         ]);
-    }
-    
+    }    
 }

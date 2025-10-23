@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /* INCLUDED IN ORDER_DETAILS
         Schema::table('orders_details', function (Blueprint $table) {
             $table->foreignId('product_id')->constrained('product')->cascadeOnDelete();
         });
+        */
     }
 
     /**
