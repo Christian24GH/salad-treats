@@ -3,6 +3,7 @@ import axios from "axios";
 import MenuBarNavigation from "@/components/admin/navigation-menu";
 import { usePage } from '@inertiajs/react'
 import { Toaster } from "sonner";
+
 export default function HomeLayout({ children }){
     const { auth } = usePage().props
     

@@ -18,7 +18,7 @@ export default function Orders({orders = []}){
             <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)] flex justify-between items-center">
                 Orders
 
-                <Link href="/customer/orders/create" asChild>
+                <Link href="/customer/menu" asChild>
                     <Button className={"bg-[var(--forest-green)]"}>Add Order</Button>
                 </Link>
             </div>
@@ -34,7 +34,7 @@ export default function Orders({orders = []}){
                     </EmptyHeader>
                 
                     <EmptyContent className={"scale-120"}>
-                        <Link href="/customer/orders/create">
+                        <Link href="/customer/menu">
                             <Button className={"bg-[var(--forest-green)]"}>Order Now</Button>
                         </Link>
                     </EmptyContent>

@@ -5,20 +5,26 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Link } from "@inertiajs/react";
-import { Menu, X, LogOut } from "lucide-react";
-import { usePage } from "@inertiajs/react";
-import { router } from "@inertiajs/react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Link, usePage, router } from "@inertiajs/react";
+import { Menu, X, LogOut, ShoppingCart, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
 
 export default function MenuBarNavigation({ mobile = false }) {
   const [open, setOpen] = useState(false);
+  const { setCartOpen } = useCart();
   const { auth } = usePage().props;
 
   const handleLogout = () => {
     router.post("/logout", {
-      onSuccess: () => {
-        router.visit("/login"); // redirect to login after logout
-      },
+      onSuccess: () => router.visit("/login"),
     });
   };
 
@@ -27,14 +33,12 @@ export default function MenuBarNavigation({ mobile = false }) {
     { href: "/owner/tracker", label: "Tracker" },
     { href: "/owner/menu", label: "Menu" },
     { href: "/owner/feedback", label: "Feedback" },
-    { href: "/owner/account", label: "Account" },
   ];
 
   const customer_nav = [
     { href: "/customer/orders", label: "Orders" },
     { href: "/customer/menu", label: "Menu" },
     { href: "/customer/feedback", label: "Feedback" },
-    { href: "/customer/account", label: "Account" },
   ];
 
   const links =
@@ -67,18 +71,35 @@ export default function MenuBarNavigation({ mobile = false }) {
               </Link>
             ))}
 
+            <Link
+                href="/customer/account"
+                onClick={() => setOpen(false)}
+                className="block text-white text-base lato-regular-italic px-4 py-2 hover:bg-green-700 transition"
+              >
+              Account
+            </Link>
+            <button
+              onClick={() => {
+                setCartOpen(true);
+                setOpen(false);
+              }}
+              className="flex items-center gap-2 text-white text-base lato-regular-italic px-4 py-2 hover:bg-green-700 transition w-full text-left"
+            >
+              <ShoppingCart size={18} />
+              Cart
+            </button>
+
             <div className="border-t border-green-700 my-1" />
 
-            {/* Logout link */}
             <button
-                onClick={() => {
-                  setOpen(false);
-                  handleLogout();
-                }}
-                className="flex items-center gap-2 text-white text-base lato-regular-italic px-4 py-2 hover:bg-green-700 transition w-full text-left"
-              >
-                <LogOut size={18} />
-                Logout
+              onClick={() => {
+                setOpen(false);
+                handleLogout();
+              }}
+              className="flex items-center gap-2 text-white text-base lato-regular-italic px-4 py-2 hover:bg-green-700 transition w-full text-left"
+            >
+              <LogOut size={18} />
+              Logout
             </button>
           </div>
         )}
@@ -102,18 +123,47 @@ export default function MenuBarNavigation({ mobile = false }) {
           </NavigationMenuItem>
         ))}
 
-        {/* Logout (desktop) */}
         <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <button
-              onClick={handleLogout}
-              className="text-white text-lg lato-regular-italic px-3 hover:underline flex items-center gap-1"
-            >
-              <LogOut size={18} />
-              Logout
-            </button>
-          </NavigationMenuLink>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="text-white text-lg lato-regular-italic transition-none bg-transparent px-3 hover:underline">
+                Account
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem asChild>
+                <Link
+                  href={
+                    auth?.user?.role === "Owner"
+                      ? "/owner/account"
+                      : "/customer/account"
+                  }
+                >
+                  Profile
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-600 cursor-pointer"
+              >
+                <LogOut className="mr-2" size={16} />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </NavigationMenuItem>
+
+        {/* Cart button */}
+        <NavigationMenuItem>
+          <Button
+            onClick={() => setCartOpen(true)}
+            variant="ghost"
+            className="bg-[var(--soft-lime)] text-white hover:bg-white hover:text-[var(--forest-green)] text-lg lato-regular-italic flex items-center rounded-full aspect-square size-fit justify-center"
+          >
+            <ShoppingCart className="mx-auto -translate-x-[5%] !size-8" />
+          </Button>
+        </NavigationMenuItem>        
       </NavigationMenuList>
     </NavigationMenu>
   );

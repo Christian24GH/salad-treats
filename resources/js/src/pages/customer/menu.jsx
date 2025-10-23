@@ -18,6 +18,11 @@ export default function Menu({products = []}){
         <>
             <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)] flex justify-between items-center">
                 Available Products
+                <Link href="/customer/orders/create">
+                    <Button className={"bg-[var(--forest-green)] text-lg"}>
+                        Checkout
+                    </Button>
+                </Link>
             </div>
             <Separator/>
             {products?.length == 0 ? (
