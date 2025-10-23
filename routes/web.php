@@ -66,6 +66,9 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             // Handles the POST request to save a new menu item
             Route::post('/store', [MenuController::class, 'store'])->name('owner.menu.store');
             
+            Route::get('/edit/{id}', [MenuController::class, 'edit'])->name('owner.menu.edit');
+            
+            Route::post('/update/{id}', [MenuController::class, 'update'])->name('owner.menu.edit');
             // Displays details of a single menu item by UUID
             Route::get('/{product_uuid}', [MenuController::class, 'show'])->name('owner.menu.show');
         });

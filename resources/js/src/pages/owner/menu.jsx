@@ -9,7 +9,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { Link } from "@inertiajs/react"
+import { Link, router } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
 
 export default function Menu({products = []}){
@@ -71,7 +71,10 @@ export default function Menu({products = []}){
 
                                 {/* Actions */}
                                 <div className="mt-4 flex flex-col gap-2">
-                                    <Button className={"bg-[var(--forest-green)] !hover:bg-[var(--forest-green)]"}>
+                                    <Button
+                                        onClick={()=> router.visit(`/owner/menu/edit/${record.id}`)}
+                                        className={"bg-[var(--forest-green)] !hover:bg-[var(--forest-green)]"}
+                                    >
                                         Edit
                                     </Button>
                                     <Button
