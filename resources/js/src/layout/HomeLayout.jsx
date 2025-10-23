@@ -6,9 +6,12 @@ import { Toaster } from "sonner";
 export default function HomeLayout({ children }){
     const { auth } = usePage().props
     
-    //sets csrf token so all request doest get rejected by laravel e.g 419 error
     useEffect(() => {
-        axios.get("/sanctum/csrf-cookie");
+        // Configure axios defaults for CSRF
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute('content');
     }, []);
     
     return (
