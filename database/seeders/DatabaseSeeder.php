@@ -31,8 +31,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ]);
 
-        Order::factory(50)->create();
-        Inventory::factory(100)->create();
-        Product::factory(10)->create();
+        //Order::factory(50)->create();
+        //Product::factory(10)->create();
     }
 }

@@ -1,6 +1,6 @@
 import HomeLayout from "@/layout/HomeLayout"
 import { ChevronLeft } from "lucide-react"
-import { FaCheck } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa6";
 import { TbSaladFilled  } from "react-icons/tb";
 import { FaBox } from "react-icons/fa6";
 import { BsFillBagCheckFill } from "react-icons/bs";

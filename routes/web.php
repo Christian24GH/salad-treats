@@ -10,10 +10,14 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TrackerController;
 use App\Http\Middleware\EnsureAuthenticated;
+use App\Http\Controllers\LandingController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
 Route::get('/sanctum/csrf-cookie', fn()=>response()->noContent());
+
+// Public landing route (no auth required)
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 
 //ONLY RENDERS PAGES, POST LOGIN ROUTE IS HANDLED BY LARAVEL FORTIFY
