@@ -1,7 +1,8 @@
 import HomeLayout from "@/layout/HomeLayout"
-import { ChevronLeft, MapPin, Salad } from "lucide-react"
+import { ChevronLeft, MapPin, Salad, Loader2 } from "lucide-react"
 import { Link, router } from "@inertiajs/react"
 import { useState } from "react"
+import { format } from "date-fns"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,40 +18,30 @@ import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+
 import axios from "../../../bootstrap"
+
 export default function OrderDetails({order}){
-    const [note, setNote] = useState("")
+    console.log(order)
     
-    const AcceptOrder = async () => {
-        console.log('Clicked')
-        const payload = {
-            'uuid': order?.uuid,
-        }
-        await axios.post('/owner/orders/approve', payload)
-            .then(()=>{
-                toast.success('Order moved to tracker', {position:"top-center"})
-                router.visit('/owner/orders') //navigate
-            })
-    }
+    const [loading, setLoading] = useState(false);
 
-    const RejectOrder = async () => {
+    const handleGCashPayment = async () => {
+        setLoading(true);
         try {
-            const payload = {
-                uuid: order?.uuid,
-                note: note.trim(),
+            const response = await axios.get(`/customer/orders/${order.id}/pay-gcash`);
+            if (response.data.redirect_url) {
+                window.location.href = response.data.redirect_url;
+            } else {
+                toast.error("No redirect URL returned. Please try again later.");
             }
-
-            await axios.post("/owner/orders/reject", payload)
-
-            toast.success("Order rejected", { position: "top-center" })
-            router.visit("/owner/orders") // navigate back
-        } catch (err) {
-            console.error(err)
-            toast.error("Failed to reject order", { position: "top-center" })
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to initiate GCash payment.');
+            console.error(error);
+        } finally {
+            setLoading(false);
         }
-    }
-
-
+    };
     return (
         <>
             <div className="py-5 text-3xl lato-bold-italic text-[var(--dark-green)] flex items-center">
@@ -69,28 +60,28 @@ export default function OrderDetails({order}){
                     <div className="w-full space-y-5 grid">
                         <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                             <div className="grid grid-cols-2">
-                                <span>Customer Name</span><span>Christian Bola</span> 
+                                <span>Customer Name</span><span>{order?.customer_name}</span> 
                             </div>
                         </div>
                         <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                             <div className="grid grid-cols-2">
-                                <span>Email</span><span>email@gmail.con</span> 
+                                <span>Email</span><span>{order?.email}</span> 
                             </div>
                         </div>
                         <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                             <div className="grid grid-cols-2">
-                                <span>Region</span><span>Manila, Metro Manila Philippines</span> 
+                                <span>Address</span><span>{order?.delivery_address}</span> 
                             </div>
                         </div>
                         <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                             <div className="grid grid-cols-2">
-                                <span>Phone Number</span><span>092929295543</span> 
+                                <span>Phone Number</span><span>{order?.contact_number}</span> 
                             </div>
                         </div>
                     </div>
                     <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                         <div className="grid grid-cols-2">
-                            <span>Address</span><span>Manila, Metro Manila Philippines</span> 
+                            <span>Additional Instructions</span><span>{order?.delivery_instructions}</span> 
                         </div>
                     </div>
                 </div>
@@ -107,115 +98,72 @@ export default function OrderDetails({order}){
                             <th className="p-2 text-inherit">Qty.</th>
                             <th className="p-2 text-inherit">Unit Price</th>
                             <th className="p-2 text-inherit">Subtotal</th>
-                            <th className="p-2 text-inherit">Order Data & Time</th>
+                            <th className="p-2 text-inherit">Order Date & Time</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="w-full border text-lg lato-regular">
-                            <td className="px-2 align-top lato-bold text-2xl">1</td>
-                            <td className="flex p-2 align-top">
-                                <div className="size-40 !rounded-lg">
-                                    <img className="w-full h-full object-scale-down rounded-lg" src="/assets/salad-shrimp.jfif" alt="" />
-                                </div>
-                                <div>
-                                    <p className="text-lg">Mango Kani Rolls</p>
-                                    <p className="font-bold">Notes:</p>
-                                    <p className="font-normal">Less Mayo</p>
-                                </div>
-                            </td>
-                            <td className="align-top">1</td>
-                            <td className="align-top">P 100.00</td>
-                            <td className="align-top">P 100.00</td>
-                            <td className="align-top">07-18-2025 10:19</td>
-                        </tr>
+                        {order?.order_details.length > 0 && order?.order_details.map((order, index)=>(
+                            <tr key={`Order: ${index}`}className="w-full border text-lg lato-regular">
+                                <td className="px-2 align-top lato-bold text-2xl">{index+1}</td>
+                                <td className="flex p-2 align-top gap-3">
+                                    <div className="size-40 !rounded-lg">
+                                        <img className="w-full h-full object-scale-down rounded-lg" src={order?.product?.image_url} alt="" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xl lato-bold">{order?.product?.product_name}</p>
+                                        <p className="font-bold">Notes:</p>
+                                        <p className="font-normal">{order?.instructions}</p>
+                                    </div>
+                                </td>
+                                <td className="align-top">{order?.quantity}</td>
+                                <td className="align-top">₱ {order?.product.price}</td>
+                                <td className="align-top">₱ {order?.subtotal}</td>
+                                <td className="align-top">{format(new Date(order?.created_at), "MMM dd, yyyy, h:mm a")}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
                 <Separator/>
                 <div className="flex justify-center items-center py-4 px-4 text-2xl lato-bold gap-10">
                     <div>
-                        <span className="font-normal mr-3">Order Type: </span>
-                        <span className="font-bold">Delivery</span>
+                        <span className="font-normal mr-3">Payment Method: </span>
+                        <span className="font-bold">{order?.payment?.payment_method}</span>
                     </div>
                      <div>
                         <span className="font-normal mr-3">Payment Status: </span>
-                        <span className="font-bold">UNPAID</span>
+                        <span className="font-bold">{order?.payment?.payment_status}</span>
                     </div>
                 </div>
                 <Separator/>
                 <div className="w-full py-4 px-4 text-xl space-y-5 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3">
                     <div>
-                        <span className="mr-4">Order ID: </span><span>HLSAJA1928</span>
+                        <span className="mr-4">Order ID: </span><span>{order?.order_uuid}</span>
                     </div>
                     <div>
                         <p className="mr-4">Selected Delivery Date & Time </p>
-                        <p className="lato-bold">07-18-2025 11:00 AM - 12:00 PM</p>
+                        <p className="lato-bold">{format(new Date(order?.delivery_time), "MMM dd, yyyy, h:mm a")}</p>
                     </div>
                     <div>
-                        <div className="grid grid-cols-2 w-full mb-3">
-                            <span>Total Item(s)</span>
-                            <span className="lato-bold">1</span>
-                        </div>
-                        <div className="grid grid-cols-2 w-full">
+                        <div className="grid grid-cols-1 w-full">
                             <span className="lato-bold">Total Amount</span>
-                            <span className="lato-bold">P100.00</span>
+                            <span className="lato-bold text-3xl my-3 text-center">₱ {order?.total_price}</span>
                         </div>
                     </div>
                 </div>
                 <Separator/>
-                <div className="w-full flex justify-end p-4 gap-5">
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button className="min-w-40 min-h-15 bg-red-600 text-xl lato-regular">Reject</Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                This action cannot be undone.
-                            </AlertDialogDescription>
-                            </AlertDialogHeader>
-
-                             <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Reason / Notes
-                                </label>
-                                <Input
-                                    type="text"
-                                    placeholder="Enter reason for rejection..."
-                                    value={note}
-                                    onChange={(e) => setNote(e.target.value)}
-                                    className="w-full"
-                                />
-                            </div>
-
-                            <AlertDialogFooter>
-                                <AlertDialogCancel className={"text-xl lato-regular"}>Cancel</AlertDialogCancel>
-                                <AlertDialogAction className={"bg-red-600  text-xl lato-regular"} onClick={RejectOrder}>Reject</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                    
-                    
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button className="min-w-40 min-h-15 bg-[var(--forest-green)] text-xl lato-regular">Accept</Button>
-                        </AlertDialogTrigger>
-
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                This action cannot be undone.
-                            </AlertDialogDescription>
-                            
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel className={"text-xl lato-regular"}>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={AcceptOrder} className={"bg-[var(--forest-green)] text-xl lato-regular"}>Accept</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                </div>
+                {order.payment.payment_status === "Completed" ?  null : order.payment.payment_status === "Failed" ? null: (
+                    <div className="w-full flex justify-end p-4 gap-5">
+                        <Button  onClick={handleGCashPayment} disabled={loading}
+                            className="min-w-40 min-h-15 text-xl lato-regular bg-[var(--soft-lime)]">
+                            { loading ? (
+                                <>
+                                    <Loader2 className="mr-3 animate-spin"/>
+                                    Loading
+                                </>
+                            ): "₱ Pay using GCash"}
+                        </Button>
+                    </div>
+                )}
             </div>
             
         </>

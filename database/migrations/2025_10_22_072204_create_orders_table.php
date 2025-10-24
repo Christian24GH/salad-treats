@@ -57,7 +57,7 @@ return new class extends Migration {
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->integer('quantity')->default(1);
-            $table->decimal('price', 10, 2); // snapshot of product price
+            $table->decimal('subtotal', 10, 2);
             $table->text('instructions')->nullable();
             $table->timestamps();
         });
@@ -81,12 +81,14 @@ return new class extends Migration {
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
 
             // Payment details
-            $table->decimal('amount', 10, 2);
+            $table->decimal('total_amount', 10, 2);
+            $table->decimal('paid_amount', 10, 2);
             $table->enum('payment_method', ['Cash on Delivery', 'GCash']);
             $table->enum('payment_status', ['Pending', 'Completed', 'Failed', 'Partial'])->default('Pending');
 
             // PayMongo-specific fields
             $table->string('provider_reference_id')->nullable(); // PayMongo payment ID
+            $table->string('client_key')->nullable();
             $table->string('checkout_url')->nullable(); // Redirect link for PayMongo checkout
             $table->string('receipt_url')->nullable(); // Optional, PayMongo receipt link
             $table->json('payment_details')->nullable(); // store entire PayMongo response

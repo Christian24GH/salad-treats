@@ -12,19 +12,22 @@ class Payment extends Model
 
     protected $fillable = [
         'order_id',
-        'amount',
+        'total_amount',
+        'paid_amount',
         'payment_method',
         'payment_status',
         'provider_reference_id',
         'checkout_url',
         'receipt_url',
+        'client_key',
         'payment_details',
         'remarks'
     ];
 
     protected $casts = [
         'payment_details' => 'array',
-        'amount' => 'decimal:2',
+        'total_amount' => 'decimal:2',
+        'paid_amount' => 'decimal:2',
     ];
 
     // Relationship to Order
@@ -37,7 +40,7 @@ class Payment extends Model
     public function markAsCompleted($amountPaid)
     {
         $this->update([
-            'amount' => $amountPaid,
+            'paid_amount' => $amountPaid,
             'payment_status' => 'Completed'
         ]);
     }
@@ -45,7 +48,7 @@ class Payment extends Model
     public function markAsPartial($amountPaid)
     {
         $this->update([
-            'amount' => $amountPaid,
+            'paid_amount' => $amountPaid,
             'payment_status' => 'Partial'
         ]);
     }

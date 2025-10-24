@@ -47,8 +47,12 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::get('/create', [CustomerOrderController::class, 'create_order'])->name('customer.order.create');
             Route::post('/place', [CustomerOrderController::class, 'place_order'])->name('customer.order.place');
             Route::post('/cancel/{order_uuid}', [CustomerOrderController::class, 'cancel_order'])->name('customer.order.cancel');
-        });   
-        
+            Route::get('/{order_id}', [CustomerOrderController::class, 'order_details'])->name('customer.order.details');
+            
+            Route::get('/{order_id}/pay-gcash', [CustomerOrderController::class, 'pay_gcash'])->name('customer.order.pay-gcash');
+            Route::get('/{order_id}/gcash-return', [CustomerOrderController::class, 'gcash_return'])->name('customer.orders.gcash_return');
+        });
+
         Route::prefix('/menu')->group(function () {
             Route::get('/', [CustomerProductController::class, 'products'])->name('customer.products');
             Route::get('/product/{id}', [CustomerProductController::class, 'product_details'])->name('customer.product.details');

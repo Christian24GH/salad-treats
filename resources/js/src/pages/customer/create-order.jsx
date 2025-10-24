@@ -83,10 +83,8 @@ export default function CreateOrder() {
         await axios.post('/customer/orders/place', orderData)
             .then((response)=>{
                 if(response.status == 201){
-                    toast.success("Order submitted successfully")
-                    setOpenDialog(false)
-                    //clear cart
                     clearCart()
+                    toast.success("Order submitted successfully")
                     setOpenDialog(false)
                     reset()
                     router.visit('/customer/orders')
