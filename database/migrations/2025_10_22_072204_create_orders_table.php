@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -25,7 +24,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('orders_details', function (Blueprint $table) {
+        Schema::create('order_details', function (Blueprint $table) {
             $table->id();
             $table->string('order_uuid', 12);
             $table->foreign('order_uuid')->references('order_uuid')->on('orders')->cascadeOnDelete();
@@ -41,6 +40,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('orders');
-        Schema::dropIfExists('orders_details');
+        Schema::dropIfExists('order_details');
     }
 };

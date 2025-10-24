@@ -24,7 +24,7 @@ class OrderController extends Controller
     {
         $this->authorize('Owner');
 
-        $order = Order::with(['user.address', 'orders_details.product'])->where('order_uuid', $order_uuid)->firstOrFail();
+        $order = Order::with(['user.address', 'order_details.product'])->where('order_uuid', $order_uuid)->firstOrFail();
         return inertia('owner/order-details', [
             'order' => $order
         ]);

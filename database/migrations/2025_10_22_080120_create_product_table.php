@@ -35,7 +35,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('orders_details', function (Blueprint $table) {
+        Schema::table('order_details', function (Blueprint $table) {
             $table->foreignId('product_id')->constrained('product')->cascadeOnDelete();
         });
     }
@@ -49,7 +49,7 @@ return new class extends Migration
         Schema::dropIfExists('inventory');
         Schema::dropIfExists('ingredients');
 
-        Schema::table('orders_details', function (Blueprint $table) {
+        Schema::table('order_details', function (Blueprint $table) {
             $table->dropForeign(['product_id']);
             $table->dropColumn('product_id');
         });

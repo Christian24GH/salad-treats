@@ -29,12 +29,12 @@ class Order extends Model
 
     public function orders_details()
     {
-        return $this->hasMany(Order_Details::class, 'order_uuid', 'order_uuid');
+        return $this->hasMany(Order_Details::class , 'order_uuid', 'order_uuid');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     protected static function boot()

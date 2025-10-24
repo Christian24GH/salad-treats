@@ -111,7 +111,7 @@ export default function OrderDetails({order}){
                         </tr>
                     </thead>
                     <tbody>
-                        {order?.orders_details?.map((item, index) => (
+                        {order?.order_details?.map((item, index) => (
                         <tr className="w-full border text-lg lato-regular">
                             <td className="px-2 align-top lato-bold text-2xl">{index + 1}</td>
                             <td className="flex p-2 align-top">
@@ -155,11 +155,11 @@ export default function OrderDetails({order}){
                     <div>
                         <div className="grid grid-cols-2 w-full mb-3">
                             <span>Total Item(s)</span>
-                            <span className="lato-bold">{order?.orders_details?.length}</span>
+                            <span className="lato-bold">{order?.order_details?.length}</span>
                         </div>
                         <div className="grid grid-cols-2 w-full">
                             <span className="lato-bold">Total Amount</span>
-                            <span className="lato-bold">P{order?.orders_details?.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</span>
+                            <span className="lato-bold">P{order?.order_details?.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</span>
                         </div>
                     </div>
                 </div>

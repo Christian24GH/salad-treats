@@ -20,4 +20,9 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
     ];
+
+    public function inventoryItem()
+    {
+        return $this->hasMany(Ingredients::class, 'item_id');
+    }
 }
