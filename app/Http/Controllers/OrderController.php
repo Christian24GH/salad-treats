@@ -3,20 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
     public function orders()
     {
         $this->authorize('Owner');
-        return inertia('owner/orders');
+
+        $orders = Order::with('user.address')->orderByDesc('created_at')->get();
+        return inertia('owner/orders', [
+            'orders' => $orders
+        ]);
     }
 
-    public function order_details($uuid)
+
+    public function order_details($order_uuid)
     {
         $this->authorize('Owner');
-        return inertia('owner/order-details');
+
+        $order = Order::with(['user.address', 'orders_details.product'])->where('order_uuid', $order_uuid)->firstOrFail();
+        return inertia('owner/order-details', [
+            'order' => $order
+        ]);
     }
+
 
     public function approve_order(Request $request)
     {

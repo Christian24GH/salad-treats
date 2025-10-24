@@ -18,6 +18,26 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->timestamps();
         });
+
+        Schema::create('inventory', function (Blueprint $table) {
+            $table->id();
+            $table->string('item_name');
+            $table->decimal('amount', 10, 2);
+            $table->string('unit');
+            $table->timestamps();
+        });
+
+        Schema::create('ingredients', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('product')->cascadeOnDelete();
+            $table->foreignId('item_id')->constrained('inventory')->cascadeOnDelete();
+            $table->decimal('quantity', 10, 2);
+            $table->timestamps();
+        });
+
+        Schema::table('orders_details', function (Blueprint $table) {
+            $table->foreignId('product_id')->constrained('product')->cascadeOnDelete();
+        });
     }
 
     /**
@@ -26,5 +46,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('product');
+        Schema::dropIfExists('inventory');
+        Schema::dropIfExists('ingredients');
+
+        Schema::table('orders_details', function (Blueprint $table) {
+            $table->dropForeign(['product_id']);
+            $table->dropColumn('product_id');
+        });
     }
 };

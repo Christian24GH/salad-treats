@@ -69,28 +69,28 @@ export default function OrderDetails({order}){
                     <div className="w-full space-y-5 grid">
                         <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                             <div className="grid grid-cols-2">
-                                <span>Customer Name</span><span>Christian Bola</span> 
+                                <span>Customer Name</span><span>{order?.user?.name}</span> 
                             </div>
                         </div>
                         <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                             <div className="grid grid-cols-2">
-                                <span>Email</span><span>email@gmail.con</span> 
+                                <span>Email</span><span>{order?.user?.email}</span> 
                             </div>
                         </div>
                         <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                             <div className="grid grid-cols-2">
-                                <span>Region</span><span>Manila, Metro Manila Philippines</span> 
+                                <span>Region</span><span>{order?.user?.address?.region}</span> 
                             </div>
                         </div>
                         <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                             <div className="grid grid-cols-2">
-                                <span>Phone Number</span><span>092929295543</span> 
+                                <span>Phone Number</span><span>{order?.user?.phone_number}</span> 
                             </div>
                         </div>
                     </div>
                     <div className="row-span-1 sm:w-full md:w-full lg:w-3/4">
                         <div className="grid grid-cols-2">
-                            <span>Address</span><span>Manila, Metro Manila Philippines</span> 
+                            <span>Address</span><span>{order?.user?.address?.full_address}</span> 
                         </div>
                     </div>
                 </div>
@@ -111,23 +111,25 @@ export default function OrderDetails({order}){
                         </tr>
                     </thead>
                     <tbody>
+                        {order?.orders_details?.map((item, index) => (
                         <tr className="w-full border text-lg lato-regular">
-                            <td className="px-2 align-top lato-bold text-2xl">1</td>
+                            <td className="px-2 align-top lato-bold text-2xl">{index + 1}</td>
                             <td className="flex p-2 align-top">
                                 <div className="size-40 !rounded-lg">
                                     <img className="w-full h-full object-scale-down rounded-lg" src="/assets/salad-shrimp.jfif" alt="" />
                                 </div>
                                 <div>
-                                    <p className="text-lg">Mango Kani Rolls</p>
+                                    <p className="text-lg">{item?.product?.name}</p>
                                     <p className="font-bold">Notes:</p>
-                                    <p className="font-normal">Less Mayo</p>
+                                    <p className="font-normal">{item?.notes}</p>
                                 </div>
                             </td>
-                            <td className="align-top">1</td>
-                            <td className="align-top">P 100.00</td>
-                            <td className="align-top">P 100.00</td>
-                            <td className="align-top">07-18-2025 10:19</td>
+                            <td className="align-top">{item?.quantity}</td>
+                            <td className="align-top">P {item?.price}</td>
+                            <td className="align-top">P {item?.subtotal}</td>
+                            <td className="align-top">{item?.order_date} {item?.order_time}</td>
                         </tr>
+                        ))}
                     </tbody>
                 </table>
                 <Separator/>
@@ -144,20 +146,20 @@ export default function OrderDetails({order}){
                 <Separator/>
                 <div className="w-full py-4 px-4 text-xl space-y-5 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3">
                     <div>
-                        <span className="mr-4">Order ID: </span><span>HLSAJA1928</span>
+                        <span className="mr-4">Order ID: </span><span>{order?.order_uuid}</span>
                     </div>
                     <div>
                         <p className="mr-4">Selected Delivery Date & Time </p>
-                        <p className="lato-bold">07-18-2025 11:00 AM - 12:00 PM</p>
+                        <p className="lato-bold">{order?.order_date} {order?.order_time}</p>
                     </div>
                     <div>
                         <div className="grid grid-cols-2 w-full mb-3">
                             <span>Total Item(s)</span>
-                            <span className="lato-bold">1</span>
+                            <span className="lato-bold">{order?.orders_details?.length}</span>
                         </div>
                         <div className="grid grid-cols-2 w-full">
                             <span className="lato-bold">Total Amount</span>
-                            <span className="lato-bold">P100.00</span>
+                            <span className="lato-bold">P{order?.orders_details?.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
