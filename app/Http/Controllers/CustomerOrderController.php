@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Payment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +58,7 @@ class CustomerOrderController extends Controller
             'items.*.extras' => 'nullable|array',
             'items.*.extras.*.product_id' => 'required|integer|exists:products,id',
             'items.*.extras.*.quantity' => 'required|integer|min:1',
+            'payment_method' => 'required|in:Cash on Delivery, GCash',
         ]);
 
         DB::beginTransaction();
@@ -108,8 +110,16 @@ class CustomerOrderController extends Controller
                     }
                 }
             }
-
+            
             $order->update(['total_price' => $total]);
+
+            $payment = Payment::create([
+                'order_id' => $order->id,
+                'amount' => $total,
+                'payment_method' => $validated['payment_method'],
+                'payment_status' => 'Pending',
+            ]);
+            
 
             DB::commit();
 

@@ -10,21 +10,23 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {   
+        /*
         Schema::table('ingredients', function (Blueprint $table) {
             //Add item_id foreign key to ingredients table
             $table->foreignId('item_id')->constrained('inventory')->cascadeOnDelete();
-        });
+        });*/
     }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-    {
+    {   
+        /*
         Schema::table('ingredients', function (Blueprint $table) {
             $table->dropForeign(['item_id']);
             $table->dropColumn('item_id');
-        });
+        });*/
     }
 };

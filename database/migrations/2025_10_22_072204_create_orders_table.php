@@ -79,9 +79,19 @@ return new class extends Migration {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
+
+            // Payment details
             $table->decimal('amount', 10, 2);
-            $table->enum('payment_method', ['Cash on Delivery', 'Online Payment']);
-            $table->enum('payment_status', ['Pending', 'Completed', 'Failed'])->default('Pending');
+            $table->enum('payment_method', ['Cash on Delivery', 'GCash']);
+            $table->enum('payment_status', ['Pending', 'Completed', 'Failed', 'Partial'])->default('Pending');
+
+            // PayMongo-specific fields
+            $table->string('provider_reference_id')->nullable(); // PayMongo payment ID
+            $table->string('checkout_url')->nullable(); // Redirect link for PayMongo checkout
+            $table->string('receipt_url')->nullable(); // Optional, PayMongo receipt link
+            $table->json('payment_details')->nullable(); // store entire PayMongo response
+
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

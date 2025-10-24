@@ -48,6 +48,7 @@ export default function Orders({orders = []}){
     const handlePayment = () => {
 
     }
+    
     return (
         <>
             <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)] flex justify-between items-center">
