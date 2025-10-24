@@ -25,8 +25,20 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);*/
 
-        Order::factory(30)->create();
-        Inventory::factory(100)->create();
-        Product::factory(50)->create();
+        Product::factory(15)->create();
+        User::create([
+            'name' => 'Christian',
+            'email' => 'loquezchristian@gmail.com',
+            'role'  => 'Customer',
+            'password' => '12345678',
+            'email_verified_at' => now(),
+        ]);
+        User::create([
+            'name' => 'Owner',
+            'email' => 'owner@gmail.com',
+            'role'  => 'Owner',
+            'password' => '12345678',
+            'email_verified_at' => now(),
+        ]);
     }
 }

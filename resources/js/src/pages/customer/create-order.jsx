@@ -21,10 +21,18 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { usePage, router } from "@inertiajs/react"
 import { toast } from "sonner"
 import axios from "../../../bootstrap"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 export default function CreateOrder() {
     const { auth } = usePage().props
     //console.log(auth)
@@ -36,6 +44,7 @@ export default function CreateOrder() {
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
         reset,
     } = useForm({
@@ -45,6 +54,7 @@ export default function CreateOrder() {
             delivery_address: "",
             delivery_time: "",
             delivery_instructions: "",
+            payment_method: "",
         },
     })
 
@@ -197,7 +207,7 @@ export default function CreateOrder() {
 
            
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="sm:max-w-[500px] max-h-screen overflow-auto">
                     <DialogHeader>
                         <DialogTitle>Enter Delivery Details</DialogTitle>
                     </DialogHeader>
@@ -207,9 +217,10 @@ export default function CreateOrder() {
                             <FieldGroup>
                                 
                                 <Field>
-                                    <FieldLabel>Customer Name</FieldLabel>
+                                    <FieldLabel className="text-lg">Customer Name</FieldLabel>
                                     <Input
                                         defaultValues={auth?.user?.name}
+                                        className={"text-lg !h-16"}
                                         placeholder="e.g. John Doe"
                                         {...register("customer_name", {
                                             required: "Customer name is required",
@@ -225,12 +236,36 @@ export default function CreateOrder() {
                                         </FieldDescription>
                                     )}
                                 </Field>
-
-                                    
+                                
                                 <Field>
-                                    <FieldLabel>Contact Number</FieldLabel>
+                                    <FieldLabel  className={"text-lg"}>Payment Method</FieldLabel>
+                                    <Controller
+                                        name="payment_method"
+                                        control={control}
+                                        rules={{ required: "Payment method is required!" }}
+                                        render={({ field }) => (
+                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                <SelectTrigger className="w-full !h-16 !text-xl">
+                                                    <SelectValue placeholder="Select Payment Method" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem className={"!h-16 !text-xl"} value="Cash on Delivery">Cash on Delivery</SelectItem>
+                                                    <SelectItem className={"!h-16 !text-xl"} value="GCash">GCash</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+                                    </Field>
+                                    {errors.payment_method && (
+                                        <FieldDescription className="text-red-500">
+                                            {errors.payment_method.message}
+                                        </FieldDescription>
+                                    )}
+                                <Field>
+                                    <FieldLabel className="text-lg">Contact Number</FieldLabel>
                                     <Input
                                         placeholder="e.g. 09123456789"
+                                        className={"text-lg !h-16"}
                                         {...register("contact_number", {
                                             required: "Contact number is required",
                                             pattern: {
@@ -249,8 +284,9 @@ export default function CreateOrder() {
 
                                 
                                 <Field>
-                                    <FieldLabel>Delivery Address</FieldLabel>
+                                    <FieldLabel className="text-lg">Delivery Address</FieldLabel>
                                     <Textarea
+                                        className={"text-lg !h-16"}
                                         placeholder="Enter your full address"
                                         {...register("delivery_address", {
                                             required: "Delivery address is required",
@@ -265,8 +301,9 @@ export default function CreateOrder() {
 
                                 
                                 <Field>
-                                    <FieldLabel>Preferred Delivery Time</FieldLabel>
+                                    <FieldLabel className="text-lg">Preferred Delivery Time</FieldLabel>
                                     <Input
+                                        className={"text-lg !h-16"}
                                         type="datetime-local"
                                         {...register("delivery_time", {
                                             required: "Please select a delivery time",
@@ -281,8 +318,9 @@ export default function CreateOrder() {
 
                                 
                                 <Field>
-                                    <FieldLabel>Delivery Instructions</FieldLabel>
+                                    <FieldLabel className="text-lg">Delivery Instructions</FieldLabel>
                                     <Textarea
+                                        className={"text-lg !min-h-16"}
                                         placeholder="Optional (e.g., Leave at front gate)"
                                         {...register("delivery_instructions")}
                                     />
@@ -292,21 +330,23 @@ export default function CreateOrder() {
                                         </FieldDescription>
                                     )}
                                 </Field>
+
                             </FieldGroup>
                         </FieldSet>
 
-                        <DialogFooter className="mt-4">
+                        <DialogFooter className="mt-4 text-lg">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={() => setOpenDialog(false)}
                                 disabled={loading}
+                                className="text-lg"
                             >
                                 Cancel
                             </Button>
                             <Button
                                 type="submit"
-                                className="bg-[var(--forest-green)] text-white"
+                                className="bg-[var(--forest-green)] text-white text-lg"
                                 disabled={loading}
                             >
                                 {loading ? (

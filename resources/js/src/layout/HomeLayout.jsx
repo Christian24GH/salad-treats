@@ -26,7 +26,7 @@ export default function HomeLayout({ children }){
                         />
                         </div>
                         <h1 className="birthstone-regular text-5xl md:text-3xl font-bold text-white cursor-pointer select-none whitespace-nowrap">
-                            Salad Fruits
+                            Salad Treats
                         </h1>
                     </div>
 

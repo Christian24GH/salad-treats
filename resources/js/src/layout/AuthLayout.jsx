@@ -18,7 +18,7 @@ const FormLayout = ({children}) => {
                     />
                 </div>
                 <h1 className="birthstone-regular text-3xl font-bold text-white cursor-pointer select-none">
-                    Salad Fruits
+                    Salad Treats
                 </h1>
                 </div>
             </header>

@@ -92,7 +92,7 @@ class CustomerOrderController extends Controller
                     'instructions' => $item['instructions'] ?? null,
                 ]);
 
-                // 3. If there are extras, include them as separate order details
+    
                 if (!empty($item['extras'])) {
                     foreach ($item['extras'] as $extra) {
                         $extraProduct = Product::findOrFail($extra['product_id']);

@@ -48,7 +48,7 @@ export default function Orders({orders = []}){
     const handlePayment = () => {
 
     }
-    
+
     return (
         <>
             <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)] flex justify-between items-center">
@@ -89,33 +89,6 @@ export default function Orders({orders = []}){
                                     View Full Details
                                 </Button>
                             </Link>
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button 
-                                        className="text-lg lato-regular-italic">
-                                        Pay Online
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently delete your
-                                        account and remove your data from our servers.
-                                    </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction
-                                        onClick={()=>{
-                                            handleCancel(record.order_uuid)
-                                        }}
-                                    >
-                                        Pay
-                                    </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button 
