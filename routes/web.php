@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\CustomerProductController;
+use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
@@ -103,6 +104,13 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::post('/update/{id}', [MenuController::class, 'update'])->name('owner.menu.update');
             // Displays details of a single menu item by UUID
             Route::get('/{product_uuid}', [MenuController::class, 'show'])->name('owner.menu.show');
+        });
+    });
+
+    Route::prefix('/d')->group(function(){
+        Route::prefix('/deliveries')->group(function(){
+            Route::get('/', [DeliveryController::class, 'deliveries'])->name('deliveries');
+            Route::get('/{delivery_id}', [DeliveryController::class, 'delivery_details'])->name('delivery.details');
         });
     });
 });
