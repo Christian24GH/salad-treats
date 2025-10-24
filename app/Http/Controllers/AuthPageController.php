@@ -32,7 +32,7 @@ class AuthPageController extends Controller
         // Redirect based on role
         switch ($user->role) {
             case 'Customer':
-                return redirect()->route('customer.dashboard');
+                return redirect()->route('customer.orders');
                 
             case 'Owner':
                 return redirect()->route('owner.orders');

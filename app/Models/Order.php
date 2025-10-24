@@ -13,49 +13,46 @@ class Order extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'orders';
-
+    protected $primaryKey = 'id';
+    
     protected $fillable = [
-        'user_id',
         'order_uuid',
-        'order_date',
-        'order_time',
+        'user_id',
+        'customer_name',
+        'contact_number',
+        'delivery_address',
+        'delivery_time',
+        'delivery_instructions',
         'total_price',
         'status',
     ];
 
-    protected $casts = [
-        'total_price' => 'decimal:2',
-    ];
-
-    public function orders_details()
-    {
-        return $this->hasMany(Order_Details::class , 'order_uuid', 'order_uuid');
-    }
-
+    /**
+     * An order belongs to one user (customer).
+     */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    protected static function boot()
+    /**
+     * An order can have multiple order details.
+     */
+    public function orderDetails()
     {
-        parent::boot();
-
-        static::creating(function ($order) {
-            Log::info('Order boot creating event fired');
-            if (empty($order->order_id)) {
-                $order->order_id = self::generateUniqueString();
-            }
-        });
+        return $this->hasMany(OrderDetail::class, 'order_id');
     }
 
-
-    protected static function generateUniqueString(): string
+    /**
+     * An order may have one delivery.
+     */
+    public function delivery()
     {
-        do {
-            $string = Str::upper(Str::random(12, false, true));
-        } while (self::where('order_id', $string)->exists());
+        return $this->hasOne(Delivery::class, 'order_id');
+    }
 
-        return $string;
+    public function payment()
+    {
+        return $this->hasOne(Payment::class, 'order_id');
     }
 }

@@ -2,14 +2,13 @@ import { useEffect } from "react";
 import axios from "axios";
 
 const FormLayout = ({children}) => {
-
     //sets csrf token so all request doest get rejected by laravel e.g 419 error
     useEffect(() => {
         axios.get("/sanctum/csrf-cookie");
     }, []);
     return (
         <div className="w-full h-full">
-            <header className="h-[50px] w-full bg-[var(--forest-green)] flex items-center px-4 fixed top-0">
+            <header className="h-[50px] md:h-[60px] w-full bg-[var(--forest-green)] flex items-center px-4 fixed top-0 z-50">
                 <div className="flex items-center gap-x-3">
                 <div className="w-[44px] h-[44px] rounded-full overflow-hidden flex items-center justify-center bg-white">
                     <img
@@ -19,11 +18,13 @@ const FormLayout = ({children}) => {
                     />
                 </div>
                 <h1 className="birthstone-regular text-3xl font-bold text-white cursor-pointer select-none">
-                    Salad Fruits
+                    Salad Treats
                 </h1>
                 </div>
             </header>
-            {children}
+            <div className="my-[50px] md:my-[60px]">
+                {children}
+            </div>
         </div>
     )
 }

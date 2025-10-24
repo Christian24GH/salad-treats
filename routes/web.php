@@ -3,8 +3,12 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerOrderController;
+use App\Http\Controllers\CustomerProductController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TrackerController;
 use App\Http\Middleware\EnsureAuthenticated;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -38,8 +42,23 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
     
     //DASHBOARDS
     Route::prefix('/customer')->group(function () {
-        Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');    
+        Route::prefix('/orders')->group(function () {
+            Route::get('/', [CustomerOrderController::class, 'orders'])->name('customer.orders');
+            Route::get('/create', [CustomerOrderController::class, 'create_order'])->name('customer.order.create');
+            Route::post('/place', [CustomerOrderController::class, 'place_order'])->name('customer.order.place');
+            Route::post('/cancel/{order_uuid}', [CustomerOrderController::class, 'cancel_order'])->name('customer.order.cancel');
+            Route::get('/{order_id}', [CustomerOrderController::class, 'order_details'])->name('customer.order.details');
+            
+            Route::get('/{order_id}/pay-gcash', [CustomerOrderController::class, 'pay_gcash'])->name('customer.order.pay-gcash');
+            Route::get('/{order_id}/gcash-return', [CustomerOrderController::class, 'gcash_return'])->name('customer.orders.gcash_return');
+        });
+
+        Route::prefix('/menu')->group(function () {
+            Route::get('/', [CustomerProductController::class, 'products'])->name('customer.products');
+            Route::get('/product/{id}', [CustomerProductController::class, 'product_details'])->name('customer.product.details');
+        });
     });
+    
     
     Route::prefix('/owner')->group(function () {
         Route::prefix('/orders')->group(function () {
@@ -48,6 +67,32 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::post('/approve', [OrderController::class, 'approve_order'])->name('owner.orders.approve');
             Route::post('/reject', [OrderController::class, 'reject_order'])->name('owner.orders.reject');
         });
-        
+
+        Route::prefix('/tracker')->group(function () {
+            Route::get('/', [TrackerController::class, 'tracker'])->name('owner.tracker');
+            Route::get('/{order_uuid}', [TrackerController::class, 'tracker_details'])->name('owner.tracker.show');
+        });
+
+        Route::prefix('/feedback')->group(function () {
+            Route::get('/', [FeedbackController::class, 'feedback'])->name('owner.feedback');
+            Route::get('/{order_uuid}', [FeedbackController::class, 'feedback_details'])->name('owner.feedback.show');
+        });
+
+        Route::prefix('/menu')->group(function () {
+            // Displays the list of all menu items
+            Route::get('/', [MenuController::class, 'index'])->name('owner.menu');
+
+            // Shows the form for creating a new menu item
+            Route::get('/create', [MenuController::class, 'create'])->name('owner.menu.create');
+
+            // Handles the POST request to save a new menu item
+            Route::post('/store', [MenuController::class, 'store'])->name('owner.menu.store');
+            
+            Route::get('/edit/{id}', [MenuController::class, 'edit'])->name('owner.menu.edit');
+
+            Route::post('/update/{id}', [MenuController::class, 'update'])->name('owner.menu.edit');
+            // Displays details of a single menu item by UUID
+            Route::get('/{product_uuid}', [MenuController::class, 'show'])->name('owner.menu.show');
+        });
     });
 });

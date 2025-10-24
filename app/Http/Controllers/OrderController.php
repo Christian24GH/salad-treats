@@ -45,12 +45,11 @@ class OrderController extends Controller
     public function reject_order(Request $request)
     {
         $this->authorize('Owner');
-        /*
+        
         $validation = $request->validate([
             'uuid'  => ['required'],
             'notes' => ['required']
-        ]);*/
-
+        ]);
         // add business logic here
         return response()->json(['message' => 'Order denied'], 200);
     }

@@ -54,9 +54,9 @@ export default function OrderDetails({order}){
     return (
         <>
             <div className="py-5 text-3xl lato-bold-italic text-[var(--dark-green)] flex items-center">
-                <Link href={"/owner/orders"}>
-                    <ChevronLeft className="mr-5 h-full"/>
-                </Link>
+                <Button variant="ghost" className="!size-fit !p-0" onClick={()=> window.history.back()}>
+                    <ChevronLeft className="mr-5 !size-10"/>
+                </Button>
                 <span className="">Order Details</span>
             </div>
             <div className="w-full h-auto border-1 rounded-sm bg-[var(--mint-cream)] text-[var(--dark-green)]">
