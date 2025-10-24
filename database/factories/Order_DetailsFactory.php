@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Order_Details;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,9 +15,9 @@ class Order_DetailsFactory extends Factory
 
     public function definition(): array
     {
+        // Note: The actual values will be set in the OrderFactory's afterCreating method.
         return [
-            'quantity' => fake()->numberBetween(1, 10),
-            'price' => fake()->randomFloat(2, 5, 100),
+            // blank for now 
         ];
     }
 }
