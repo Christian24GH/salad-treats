@@ -1,7 +1,6 @@
 {
-<<<<<<< HEAD
   "resources/css/app.css": {
-    "file": "assets/app-_kmzmDp0.css",
+    "file": "assets/app-g3jezTBO.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -9,11 +8,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-C87-EKt-.js",
-=======
-  "resources/js/app.jsx": {
-    "file": "assets/app-VMNjDo1K.js",
->>>>>>> master
+    "file": "assets/app-rY21hbSj.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true
