@@ -43,7 +43,7 @@ class MenuController extends Controller
         $request->validate([
             'product_name' => 'required|string|max:255',
             'product_description' => 'required|string',
-            'product_price' => 'required|numeric',
+            'product_price' => 'required|numeric|min:20',
             'product_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'product_type' => 'required|in:Salad,Rolls,Platter,Extras',
         ]);
@@ -71,7 +71,7 @@ class MenuController extends Controller
         $request->validate([
             'product_name' => 'required|string|max:255',
             'product_description' => 'required|string',
-            'product_price' => 'required|numeric',
+            'product_price' => 'required|numeric|min:20',
             'product_picture' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'product_type' => 'required|in:Salad,Rolls,Platter,Extras',
         ]);

@@ -1,15 +1,20 @@
 import axios from 'axios';
 
-window.axios = axios;
-window.axios.defaults.withCredentials = true;
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+const api = axios.create({
+  withCredentials: true,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+  },
+});
 
-// Add CSRF token to all requests
-let token = document.head.querySelector('meta[name="csrf-token"]');
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found');
-}
+// ensure CSRF cookie is fetched before each request
+api.interceptors.request.use(async (config) => {
+  // Only run if CSRF cookie is missing
+  if (!document.cookie.includes('XSRF-TOKEN')) {
+    await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
+  }
 
-export default axios;
+  return config;
+}, (error) => Promise.reject(error));
+
+export default api;

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "resources/css/app.css": {
     "file": "assets/app-_kmzmDp0.css",
     "src": "resources/css/app.css",
@@ -9,6 +10,10 @@
   },
   "resources/js/app.jsx": {
     "file": "assets/app-C87-EKt-.js",
+=======
+  "resources/js/app.jsx": {
+    "file": "assets/app-VMNjDo1K.js",
+>>>>>>> master
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true

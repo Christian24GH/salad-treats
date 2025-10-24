@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+<<<<<<< HEAD
 use App\Models\Ingredients;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -10,10 +11,16 @@ use App\Models\Inventory;
 /**
  * @extends Factory<Product>
  */
+=======
+use App\Models\Product;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+>>>>>>> master
 class ProductFactory extends Factory
 {
     protected $model = Product::class;
 
+<<<<<<< HEAD
     public function definition(): array
     {
         return [
@@ -37,3 +44,20 @@ class ProductFactory extends Factory
         });
     }
 }
+=======
+    protected $defaultImage = 'products/default.jpg';
+
+    public function definition(): array
+    {
+        $types = ['Salad', 'Rolls', 'Platter', 'Extras'];
+
+        return [
+            'product_name' => $this->faker->words(2, true),
+            'description' => $this->faker->sentence(),
+            'price' => 20,
+            'image_path' => $this->defaultImage,
+            'type' => $this->faker->randomElement($types),
+        ];
+    }
+}
+>>>>>>> master

@@ -12,12 +12,13 @@ import {
 import { Link } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
 
-export default function Tracker({tracker = []}){
+export default function Tracker({orders}){
+    console.log(orders)
     return (
         <>
-            <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)]">Tracker</div>
+            <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)]">Order Tracker</div>
             <Separator/>
-            {!tracker?.length == 0 ? (
+            {!orders?.length > 0 ? (
                 <Empty>
                     <EmptyHeader className={"scale-120"}>
                         <EmptyMedia variant="icon">
@@ -28,39 +29,27 @@ export default function Tracker({tracker = []}){
                     </EmptyHeader>
                 </Empty>
             ) : (
-                tracker.map((record, index) => (
-                    <div key={`No ${index}`} className="w-full min-h-10 flex item-center text-[var(--forest-green)] bg-[var(--mint-cream)] rounded-sm my-3">
-                        <div className="flex items-center p-2 text-2xl font-bold mr-4">{index+1}</div>
-                        <div className="flex flex-col py-2 flex-2">
-                            <p className="font-bold text-lg">Customer Name: <span className="font-normal">{record?.customer_name}</span></p>
-                            <p className="font-bold text-lg">Order ID: <span className="font-normal">{record?.order_uuid}</span></p>
+                orders.map((record, index) => (
+                    <div key={`No ${index}`}>
+                        <div className="w-full min-h-10 flex item-center text-[var(--forest-green)] bg-[var(--mint-cream)] rounded-sm my-3">
+                            <div className="flex items-center p-2 text-2xl font-bold mr-4">{index+1}</div>
+                            <div className="flex flex-col py-2 flex-2">
+                                <p className="font-bold text-lg">Customer Name: <span className="font-normal">{record?.customer_name}</span></p>
+                                <p className="font-bold text-lg">Order Status: <span className="font-normal">{record?.status}</span></p>
+                                <p className="font-bold text-lg">Payment Status: <span className="font-normal">{`${record?.payment.payment_status} — ${record?.payment.payment_method}` }</span></p>
+                            </div>
+                            <div className="flex items-center me-2">
+                                <Link href={`/owner/tracker/${record.id}`}>
+                                    <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
+                                        View Full Details
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
-                        <div className="flex items-center me-2">
-                            <Link asChild>
-                                <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
-                                    View Full Details
-                                </Button>
-                            </Link>
-                        </div>
+                        <Separator />
                     </div>
                 ))
             )}
-            
-            <div key={`No ${1}`} className="w-full min-h-10 flex item-center text-[var(--forest-green)] bg-[var(--mint-cream)] rounded-sm my-3">
-                <div className="flex items-center p-2 text-2xl font-bold mr-4">1</div>
-                <div className="flex flex-col py-2 flex-2">
-                    <p className="font-bold text-lg">Customer Name: <span className="font-normal">Christian</span></p>
-                    <p className="font-bold text-lg">Order ID: <span className="font-normal">12345</span></p>
-                </div>
-                <div className="flex items-center me-2">
-                    <Link href="/owner/tracker/1" asChild>
-                        <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
-                            View Full Details
-                        </Button>
-                    </Link>
-                </div>
-            </div>
-            <Separator />
         </>
     )
 }

@@ -3,15 +3,13 @@ import axios from "axios";
 import MenuBarNavigation from "@/components/admin/navigation-menu";
 import { usePage } from '@inertiajs/react'
 import { Toaster } from "sonner";
+
 export default function HomeLayout({ children }){
     const { auth } = usePage().props
     
+    //sets csrf token so all request doest get rejected by laravel e.g 419 error
     useEffect(() => {
-        // Configure axios defaults for CSRF
-        axios.defaults.withCredentials = true;
-        axios.defaults.headers.common['X-XSRF-TOKEN'] = document
-            .querySelector('meta[name="csrf-token"]')
-            ?.getAttribute('content');
+        axios.get("/sanctum/csrf-cookie");
     }, []);
     
     return (
@@ -28,7 +26,7 @@ export default function HomeLayout({ children }){
                         />
                         </div>
                         <h1 className="birthstone-regular text-5xl md:text-3xl font-bold text-white cursor-pointer select-none whitespace-nowrap">
-                            Salad Fruits
+                            Salad Treats
                         </h1>
                     </div>
 

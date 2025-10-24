@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone_number');
             $table->enum('role', [
                 'Customer', 
-                'Owner'
+                'Owner',
+                'Delivery'
             ])->default('Customer');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -39,6 +41,17 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('address', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('house_no')->nullable();
+            $table->string('street')->nullable();
+            $table->string('barangay')->nullable();
+            $table->string('city')->nullable();
+            $table->string('region')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -49,5 +62,6 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('address');
     }
 };

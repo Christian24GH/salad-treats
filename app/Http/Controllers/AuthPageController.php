@@ -36,6 +36,9 @@ class AuthPageController extends Controller
                 
             case 'Owner':
                 return redirect()->route('owner.orders');
+            
+            case 'Delivery':
+                return redirect()->route('deliveries');
 
             default:
                 return redirect()->route('login');

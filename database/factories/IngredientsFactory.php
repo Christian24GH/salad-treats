@@ -15,7 +15,11 @@ class IngredientsFactory extends Factory
     public function definition(): array
     {
         return [
+<<<<<<< HEAD
             'quantity' => fake()->numberBetween(1, 10),
+=======
+            'quantity' => fake()->randomFloat(2, 1, 20),
+>>>>>>> master
         ];
     }
 }

@@ -10,7 +10,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $table = 'product';
+    protected $table = 'products';
 
     protected $fillable = [
         'product_name',
@@ -32,5 +32,10 @@ class Product extends Model
         return $this->image_path 
             ? Storage::url($this->image_path) 
             : asset('images/default-product.png'); // fallback image
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'product_id');
     }
 }
