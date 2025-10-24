@@ -18,7 +18,7 @@ Route::get('/sanctum/csrf-cookie', fn()=>response()->noContent());
 
 //ONLY RENDERS PAGES, POST LOGIN ROUTE IS HANDLED BY LARAVEL FORTIFY
 Route::get('/login', [AuthPageController::class, 'login'])->name('login');
-Route::get('/register', [AuthPageController::class, 'register'])->name('register');
+Route::get('/register', [AuthPageController::class, 'register']);
 Route::get('/email/verify', function () {
     return inertia('auth/verify-email');
 })->middleware('auth')->name('verification.notice');
@@ -51,6 +51,8 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             
             Route::get('/{order_id}/pay-gcash', [CustomerOrderController::class, 'pay_gcash'])->name('customer.order.pay-gcash');
             Route::get('/{order_id}/gcash-return', [CustomerOrderController::class, 'gcash_return'])->name('customer.orders.gcash_return');
+
+            
         });
 
         Route::prefix('/menu')->group(function () {
@@ -63,14 +65,18 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
     Route::prefix('/owner')->group(function () {
         Route::prefix('/orders')->group(function () {
             Route::get('/', [OrderController::class, 'orders'])->name('owner.orders');
-            Route::get('/{order_uuid}', [OrderController::class, 'order_details'])->name('owner.orders.show');
+            Route::get('/{order_id}', [OrderController::class, 'order_details'])->name('owner.orders.show');
             Route::post('/approve', [OrderController::class, 'approve_order'])->name('owner.orders.approve');
             Route::post('/reject', [OrderController::class, 'reject_order'])->name('owner.orders.reject');
+
+            
         });
 
         Route::prefix('/tracker')->group(function () {
             Route::get('/', [TrackerController::class, 'tracker'])->name('owner.tracker');
-            Route::get('/{order_uuid}', [TrackerController::class, 'tracker_details'])->name('owner.tracker.show');
+            Route::get('/{id}', [TrackerController::class, 'tracker_details']);
+            Route::post('/{id}/status', [TrackerController::class, 'updateStatus']);
+            Route::post('/{id}/assign-driver', [TrackerController::class, 'assignDriver']);
         });
 
         Route::prefix('/feedback')->group(function () {
@@ -90,7 +96,7 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             
             Route::get('/edit/{id}', [MenuController::class, 'edit'])->name('owner.menu.edit');
 
-            Route::post('/update/{id}', [MenuController::class, 'update'])->name('owner.menu.edit');
+            Route::post('/update/{id}', [MenuController::class, 'update'])->name('owner.menu.update');
             // Displays details of a single menu item by UUID
             Route::get('/{product_uuid}', [MenuController::class, 'show'])->name('owner.menu.show');
         });

@@ -91,6 +91,9 @@ export default function CreateOrder() {
                 }
             })
             .catch((error)=>{
+                if(error.status === 500){
+                    toast.warning(error.response.data.message)
+                }
                 console.log(error)
             })
             .finally(()=>{

@@ -151,7 +151,8 @@ export default function OrderDetails({order}){
                     </div>
                 </div>
                 <Separator/>
-                {order.payment.payment_status === "Completed" ?  null : order.payment.payment_status === "Failed" ? null: (
+                {order.payment.payment_status === "Completed" ?  null : order.payment.payment_status === "Failed" ? null:
+                order.payment.payment_method === "Cash on Delivery" ? null: (
                     <div className="w-full flex justify-end p-4 gap-5">
                         <Button  onClick={handleGCashPayment} disabled={loading}
                             className="min-w-40 min-h-15 text-xl lato-regular bg-[var(--soft-lime)]">

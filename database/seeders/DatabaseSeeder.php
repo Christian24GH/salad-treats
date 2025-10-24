@@ -40,5 +40,12 @@ class DatabaseSeeder extends Seeder
             'password' => '12345678',
             'email_verified_at' => now(),
         ]);
+        User::create([
+            'name' => 'Delivery',
+            'email' => 'delivery@gmail.com',
+            'role'  => 'Delivery',
+            'password' => '12345678',
+            'email_verified_at' => now(),
+        ]);
     }
 }

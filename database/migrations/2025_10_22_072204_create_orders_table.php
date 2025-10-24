@@ -41,6 +41,8 @@ return new class extends Migration {
                 'Cancelled',
                 'Rejected',
                 'Accepted',
+                'Packaged',
+                'Preparing',
                 'On Delivery',
                 'Delivered'
             ])->default('Pending')->index();

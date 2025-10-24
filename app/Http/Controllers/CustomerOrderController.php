@@ -211,6 +211,7 @@ class CustomerOrderController extends Controller
             // 1. Check current Payment Intent status
             $intentResp = Http::withBasicAuth($secret, '')
                 ->get("https://api.paymongo.com/v1/payment_intents/{$paymentIntentId}");
+            
             $intent = $intentResp->json();
             $status = $intent['data']['attributes']['status'] ?? null;
 
@@ -249,7 +250,7 @@ class CustomerOrderController extends Controller
 
             $attach = $attachResp->json();
             $nextActionUrl = $attach['data']['attributes']['next_action']['redirect']['url'] ?? null;
-
+            Log::info("Attach Method to Intent", $attachResp->json());
             // 4. Update Payment record with latest checkout info
             $order->payment->update([
                 'payment_details' => $attach,
