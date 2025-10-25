@@ -27,9 +27,13 @@ export default function ProductDetails({ product, extras }) {
             (sum, extra) => sum + parseFloat(extra.price) * (extra.quantity || 1),
             0
         );
-        const total = (parseFloat(product.price) + extrasTotal) * newQty;
+
+        // Fix: Do not multiply extras by main product quantity
+        const total = parseFloat(product.price) * newQty + extrasTotal;
+
         setOrderTotal(total);
     };
+
 
     useEffect(() => {
         const existingItem = cart.find((item) => item.id === product.id);

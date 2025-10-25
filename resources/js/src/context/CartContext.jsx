@@ -45,23 +45,23 @@ export function CartProvider({ children }) {
     
     const computeItemTotal = (item) => {
         if (!item) return 0;
+
         const price = Number(item.price || 0);
         const qty = Number(item.quantity || 1);
 
-        const extrasTotal =
-            (item.extras || []).reduce((sum, e) => {
-                const ePrice = Number(e.price || 0);
-                const eQty = Number(e.quantity || 1);
-                return sum + ePrice * eQty;
-            }, 0) || 0;
+        // Compute total of extras (NOT multiplied by parent qty)
+        const extrasTotal = (item.extras || []).reduce((sum, e) => {
+            const ePrice = Number(e.price || 0);
+            const eQty = Number(e.quantity || 1);
+            return sum + ePrice * eQty;
+        }, 0);
 
-        // extrasTotal is per-unit extras cost (if extras quantities are per unit)
-        // item total = (base price + extrasTotal) * item quantity
-        const total = (price + extrasTotal) * qty;
+        // Fix: extras should not be multiplied by item quantity
+        const total = price * qty + extrasTotal;
 
-        
         return Number(total);
     };
+
 
     const computeCartTotal = () => {
         const total = cart.reduce((sum, item) => sum + computeItemTotal(item), 0);

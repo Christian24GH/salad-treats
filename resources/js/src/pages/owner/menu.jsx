@@ -76,11 +76,6 @@ export default function Menu({products = []}){
                                     >
                                         Edit
                                     </Button>
-                                    <Button
-                                        className={"bg-gray-400 !hover:bg-gray-400"}
-                                    >
-                                        Archive
-                                    </Button>
                                 </div>
                             </div>
                         </div>
