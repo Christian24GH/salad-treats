@@ -101,7 +101,7 @@ export default function DeliveryDetails({delivery}){
                 <Separator/>
                 <div className="w-full flex justify-end p-4 gap-5">
               
-                {(deliver.status === "Pending" && delivery?.order?.payment?.payment_status !== "Completed") && (
+                {(delivery.status === "Pending" && delivery?.order?.payment?.payment_status !== "Completed") && (
                 <Button
                     onClick={async () => {
                     setLoading(true);
