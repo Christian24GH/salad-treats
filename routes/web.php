@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TrackerController;
 use App\Http\Middleware\EnsureAuthenticated;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -20,6 +22,7 @@ Route::get('/sanctum/csrf-cookie', fn()=>response()->noContent());
 
 // Public landing route (no auth required)
 Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/landing-menu', [LandingController::class, 'menu'])->name('landing.menu');
 
 
 //ONLY RENDERS PAGES, POST LOGIN ROUTE IS HANDLED BY LARAVEL FORTIFY
@@ -57,8 +60,6 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             
             Route::get('/{order_id}/pay-gcash', [CustomerOrderController::class, 'pay_gcash'])->name('customer.order.pay-gcash');
             Route::get('/{order_id}/gcash-return', [CustomerOrderController::class, 'gcash_return'])->name('customer.orders.gcash_return');
-
-            
         });
 
         Route::prefix('/menu')->group(function () {
@@ -80,7 +81,6 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::get('/{order_id}', [OrderController::class, 'order_details'])->name('owner.orders.show');
             Route::post('/approve', [OrderController::class, 'approve_order'])->name('owner.orders.approve');
             Route::post('/reject', [OrderController::class, 'reject_order'])->name('owner.orders.reject');
-
             
         });
 
@@ -123,5 +123,9 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
         });
     });
 
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/customer/account', [UserController::class, 'customerAccount'])->name('customer.account');
+        Route::get('/owner/account', [UserController::class, 'ownerAccount'])->name('owner.account');
+    });
 
 });

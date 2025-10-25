@@ -1,7 +1,5 @@
-import MenuBarNavigation from '@/components/customer/navigation-menu';
+import MenuBarNavigation from '@/components/navigation-menu-landing';
 
-
-import { Link } from '@inertiajs/react';
 import React from 'react';
 
 export default function Landing() {
@@ -43,7 +41,7 @@ export default function Landing() {
           {/* Logo */}
           <div>
             <img
-              //src={logo}
+              src='/assets/logo.jfif'
               alt="Salad Treats Logo"
               className="w-20 h-20 mb-3"
             />

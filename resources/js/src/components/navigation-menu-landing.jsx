@@ -1,23 +1,13 @@
 import React, { useState } from "react";
-import { Link, usePage, router } from "@inertiajs/react";
-import { Menu, X, LogOut, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useCart } from "@/context/CartContext";
+import { Link } from "@inertiajs/react";
+import { Menu, X } from "lucide-react";
 
 export default function MenuBarNavigation() {
   const [open, setOpen] = useState(false);
-  const { setCartOpen } = useCart();
-  const { auth } = usePage().props;
-
-  const handleLogout = () => {
-    router.post("/logout", {
-      onSuccess: () => router.visit("/login"),
-    });
-  };
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/menu", label: "Menu" },
+    { href: "/landing-menu", label: "Menu" },
     { href: "/feedback", label: "Feedback" },
   ];
 
@@ -29,7 +19,7 @@ export default function MenuBarNavigation() {
         className="flex items-center gap-2 text-white text-2xl lato-regular-italic"
       >
         <img
-          //src={logo}
+          src='/assets/logo.jfif'
           alt="Salad Treats Logo"
           className="w-8 h-8 rounded-full"
         />
@@ -47,15 +37,6 @@ export default function MenuBarNavigation() {
             {link.label}
           </Link>
         ))}
-
-        {auth?.user && (
-          <Button
-            onClick={() => setCartOpen(true)}
-            className="relative bg-transparent hover:bg-white hover:text-[var(--forest-green)] rounded-full p-2"
-          >
-            <ShoppingCart size={24} />
-          </Button>
-        )}
       </div>
 
       {/* Mobile Menu Button */}
@@ -81,28 +62,6 @@ export default function MenuBarNavigation() {
               {link.label}
             </Link>
           ))}
-
-          {auth?.user && (
-            <button
-              onClick={() => {
-                setCartOpen(true);
-                setOpen(false);
-              }}
-              className="flex items-center gap-2 text-white text-base hover:bg-green-700 rounded-md px-3 py-2"
-            >
-              <ShoppingCart size={18} /> Cart
-            </button>
-          )}
-
-          <button
-            onClick={() => {
-              setOpen(false);
-              handleLogout();
-            }}
-            className="flex items-center gap-2 text-red-300 text-base hover:bg-green-700 rounded-md px-3 py-2"
-          >
-            <LogOut size={18} /> Logout
-          </button>
         </div>
       )}
     </nav>
