@@ -12,11 +12,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TrackerController;
 use App\Http\Middleware\EnsureAuthenticated;
 use App\Http\Controllers\LandingController;
-use App\Models\User;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 Route::get('/sanctum/csrf-cookie', fn()=>response()->noContent());
 
@@ -32,28 +29,10 @@ Route::get('/email/verify', function () {
 })->middleware('auth')->name('verification.notice');
 
 
-Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
-    $user = User::findOrFail($id);
-
-    // Check if the signed hash is valid
-    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-        abort(403, 'Invalid or expired verification link.');
-    }
-
-    // Log in the user if not already authenticated
-    if (! Auth::check()) {
-        Auth::login($user);
-    }
-
-    // Mark email as verified if not yet verified
-    if (! $user->hasVerifiedEmail()) {
-        $user->markEmailAsVerified();
-        event(new Verified($user));
-    }
-
-    return redirect()->intended('/home')->with('verified', true);
-})->middleware(['signed'])->name('verification.verify');
-
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
@@ -76,7 +55,9 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::get('/{order_id}', [CustomerOrderController::class, 'order_details'])->name('customer.order.details');
             
             Route::get('/{order_id}/pay-gcash', [CustomerOrderController::class, 'pay_gcash'])->name('customer.order.pay-gcash');
-            Route::get('/{order_id}/gcash-return', [CustomerOrderController::class, 'gcash_return'])->name('customer.orders.gcash_return')->excludedMiddleware('auth');
+            Route::get('/{order_id}/gcash-return', [CustomerOrderController::class, 'gcash_return'])->name('customer.orders.gcash_return');
+
+            
         });
 
         Route::prefix('/menu')->group(function () {
