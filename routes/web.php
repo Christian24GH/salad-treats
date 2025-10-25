@@ -77,8 +77,6 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             
             Route::get('/{order_id}/pay-gcash', [CustomerOrderController::class, 'pay_gcash'])->name('customer.order.pay-gcash');
             Route::get('/{order_id}/gcash-return', [CustomerOrderController::class, 'gcash_return'])->name('customer.orders.gcash_return')->excludedMiddleware('auth');
-
-            
         });
 
         Route::prefix('/menu')->group(function () {
