@@ -180,13 +180,12 @@ export default function TrackerDetails({ order, drivers }){
             <div className="w-full">
                 <h1 className="text-2xl lato-bold my-4 text-[var(--dark-green)]">Order Confirmed</h1>
                 <div className="border w-full h-fit p-4 space-y-2">
-                    <h1 className="text-1xl lato-regular">Status: {"Order confirmed"}</h1>
+                    <h1 className="text-1xl lato-regular">Status: {order.status}</h1>
                     <div className="flex items-center justify-between">
                         <div className="space-y-2">
-                            <h1 className="text-1xl lato-regular">Order ID: {"121312"}</h1>
-                            <h1 className="text-1xl lato-regular">Item(s) Ordered: {"1"}</h1>
+                            <h1 className="text-1xl lato-regular">Order ID: {order.order_uuid}</h1>
                         </div>
-                       <Link href={`/owner/orders/${1}`}>
+                       <Link href={`/owner/orders/${order.id}`}>
                             <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
                                 View Full Details
                             </Button>

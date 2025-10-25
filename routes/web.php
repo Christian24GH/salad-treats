@@ -111,6 +111,8 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
         Route::prefix('/deliveries')->group(function(){
             Route::get('/', [DeliveryController::class, 'deliveries'])->name('deliveries');
             Route::get('/{delivery_id}', [DeliveryController::class, 'delivery_details'])->name('delivery.details');
+            Route::post('/{delivery_id}/delivered', [DeliveryController::class, 'order_delivered'])->name('delivery.order.delivered');
+            Route::post('/{delivery_id}/delivered-paid', [DeliveryController::class, 'order_delivered_paid'])->name('delivery.order.delivered_paid');
         });
     });
 });
