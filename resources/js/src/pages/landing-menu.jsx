@@ -1,4 +1,3 @@
-import HomeLayout from "@/layout/HomeLayout"
 import { CircleQuestionMark } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -9,13 +8,15 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { Link, router } from "@inertiajs/react"
+import MenuBarNavigation from "@/components/navigation-menu-landing"
 import { Button } from "@/components/ui/button"
+import { router } from "@inertiajs/react"
 
-export default function Menu({products = []}){
+export default function LandingMenu({products = []}){
     console.log(products)
     return (
         <>
+            <MenuBarNavigation/>
             <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)] flex justify-between items-center">
                 Available Products
             </div>
@@ -56,9 +57,15 @@ export default function Menu({products = []}){
                                     <p className="text-lg text-[var(--dark-green)]">
                                         ₱ {parseFloat(record.price).toFixed(2)}
                                     </p>
-                                    
                                 </div>
                             </div>
+
+                            <Button
+                                onClick={() => router.visit(`/login`)}
+                                className={"w-full h-14 max-h-14 bg-[var(--soft-lime)] !hover:bg-[var(--forest-green)]  text-xl lato-bold-italic absolute bottom-0 rounded-t-none"}
+                            >   
+                                Add to cart
+                            </Button>
                         </div>
                     ))}
                 </div>
@@ -66,4 +73,3 @@ export default function Menu({products = []}){
         </>
     )
 }
-Menu.layout = page => <HomeLayout children={page}/>

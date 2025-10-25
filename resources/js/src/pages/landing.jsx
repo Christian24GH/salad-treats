@@ -18,7 +18,7 @@ export default function Landing() {
             Our salads aren’t just meals, they’re a fresh, easy way to live well every day.
           </p>
           <a
-            href="/customer/menu"
+            href="/landing-menu"
             className="inline-block mt-4 bg-[#FFCE42] text-[var(--forest-green)] font-bold px-8 py-3 rounded-full hover:bg-yellow-400 transition"
           >
             EXPLORE OUR MENU

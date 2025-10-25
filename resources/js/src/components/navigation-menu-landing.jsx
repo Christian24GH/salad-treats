@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import { Link, usePage, router } from "@inertiajs/react";
-import { Menu, X, LogOut, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useCart } from "@/context/CartContext";
+import { Link } from "@inertiajs/react";
+import { Menu, X } from "lucide-react";
 
 export default function MenuBarNavigation() {
   const [open, setOpen] = useState(false);
-  const { setCartOpen } = useCart();
-  const { props } = usePage();
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/menu", label: "Menu" },
+    { href: "/landing-menu", label: "Menu" },
     { href: "/feedback", label: "Feedback" },
   ];
 

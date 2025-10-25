@@ -21,7 +21,7 @@ Route::get('/sanctum/csrf-cookie', fn()=>response()->noContent());
 
 // Public landing route (no auth required)
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-Route::get('/menu', [LandingController::class, 'menu'])->name('landing.menu');
+Route::get('/landing-menu', [LandingController::class, 'menu'])->name('landing.menu');
 
 
 //ONLY RENDERS PAGES, POST LOGIN ROUTE IS HANDLED BY LARAVEL FORTIFY

@@ -16,8 +16,8 @@ class LandingController extends Controller
     public function menu()
     {
         $products = Product::get();
-        return inertia::render('menu', [
-            'product' => $products
+        return inertia::render('landing-menu', [
+            'products' => $products
         ]);
     }
 }
