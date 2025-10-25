@@ -42,7 +42,7 @@ export default function Delivery({deliveries}){
                                 <p className="font-bold text-lg">Payment Status: <span className="font-normal">{`${record?.order.payment.payment_status} — ${record?.order.payment.payment_method}` }</span></p>
                             </div>
                             <div className="flex items-center me-2">
-                                <Link href={`/d/delivery/${record.id}`}>
+                                <Link href={`/d/deliveries/${record.id}`}>
                                     <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
                                         View Full Details
                                     </Button>

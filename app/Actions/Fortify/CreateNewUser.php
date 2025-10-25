@@ -28,6 +28,7 @@ class CreateNewUser implements CreatesNewUsers
                 'max:255',
                 Rule::unique(User::class),
             ],
+            'phone_number' => ['nullable', 'string', 'max:15'],
             'password' => $this->passwordRules(),
         ])->validate();
         
@@ -36,6 +37,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'role'  => 'Customer',
+            'phone' => $input['phone_number'] ?? null,
             'password' => $input['password'],
         ]);
     }

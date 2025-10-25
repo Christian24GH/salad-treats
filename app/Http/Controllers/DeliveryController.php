@@ -11,12 +11,17 @@ class DeliveryController extends Controller
     public function deliveries(){
         $this->authorize('Delivery');
         $user = Auth::id();
-        $delivery = Delivery::where('delivery_person_id', $user)
-            ->with('order.orderDetails.product')
-            ->with('order.payment')
+
+        $deliveries = Delivery::where('delivery_person_id', $user)
+            ->whereIn('status', ['Pending', 'In Progress'])
+            ->with([
+                'order.orderDetails.product',
+                'order.payment'
+            ])
             ->get();
+
         return inertia('delivery/deliveries', [
-            'deliveries' => $delivery
+            'deliveries' => $deliveries
         ]);
     }
 
@@ -28,7 +33,7 @@ class DeliveryController extends Controller
             ->with('order.orderDetails.product')
             ->with('order.payment')
             ->firstOrFail();
-        return inertia('delivery/delivery_details', [
+        return inertia('delivery/details', [
             'delivery' => $delivery
         ]);
     }
@@ -51,18 +56,63 @@ class DeliveryController extends Controller
             ->with('success', 'Delivery status updated successfully.');
     }
 
-    public function payment_received(Request $request, $delivery_id){
+    // mark payment_status as Completed, order as Delivered
+
+    //for gcash,
+    // Mark as Delivered for GCash
+    public function order_delivered(Request $request, $delivery_id)
+    {
         $this->authorize('Delivery');
+
         $user = Auth::id();
+
         $delivery = Delivery::where('delivery_person_id', $user)
             ->where('id', $delivery_id)
             ->with('order.payment')
             ->firstOrFail();
 
-        $delivery->order->payment->payment_status = 'Paid';
-        $delivery->order->payment->save();
+        $order = $delivery->order;
 
-        return redirect()->route('delivery.details', ['delivery_id' => $delivery_id])
-            ->with('success', 'Payment status updated to Paid.');
+        if ($order->payment->payment_method !== 'GCash') {
+            return back()->with('error', 'This order is not a GCash payment.');
+        }
+
+        // Mark order as delivered
+        $delivery->status = 'Completed';
+        $delivery->save();
+
+        $order->update(['status' => 'Delivered']);
+
+        return back()->with('success', 'Order marked as delivered successfully.');
+    }
+
+
+
+    // Mark as Paid and Delivered for COD
+    public function order_delivered_paid(Request $request, $delivery_id)
+    {
+        $this->authorize('Delivery');
+
+        $user = Auth::id();
+
+        $delivery = Delivery::where('delivery_person_id', $user)
+            ->where('id', $delivery_id)
+            ->with('order.payment')
+            ->firstOrFail();
+
+        $order = $delivery->order;
+
+        if ($order->payment->payment_method !== 'Cash on Delivery') {
+            return back()->with('error', 'This order is not Cash on Delivery.');
+        }
+
+        // Mark as paid & delivered
+        $delivery->status = 'Completed';
+        $delivery->save();
+
+        $order->update(['status' => 'Delivered']);
+        $order->payment->update(['payment_status' => 'Completed']);
+
+        return back()->with('success', 'Order marked as paid and delivered successfully.');
     }
 }
