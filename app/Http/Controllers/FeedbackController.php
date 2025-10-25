@@ -11,10 +11,12 @@ class FeedbackController extends Controller
     {
         $this->authorize('Owner');
 
-        $feedbacks = Feedback::with(['order', 'order.user'])
+        $feedback = Feedback::with(['order', 'order.user'])
             ->get();
-        return inertia('owner/feedbacks', [
-            'feedbacks' => $feedbacks,
+
+            //dd($feedback);
+        return inertia('owner/feedback', [
+            'feedback' => $feedback,
         ]);
     }
 

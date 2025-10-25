@@ -1,16 +1,24 @@
 import HomeLayout from "@/layout/HomeLayout"
-import { ChevronLeft } from "lucide-react"
+import { FileQuestionIcon } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
-
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty"
 import { Link } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
 
+
 export default function Feedback({ feedback = [] }){
+    console.log("feedback", feedback)
     return (
         <>
             <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)]">Feedbacks</div>
             <Separator/>
-            {!feedback?.length == 0 ? (
+            {!feedback?.length === 0 ? (
                 <Empty>
                     <EmptyHeader className={"scale-120"}>
                         <EmptyMedia variant="icon">
