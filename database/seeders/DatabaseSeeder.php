@@ -22,15 +22,22 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'role' => 'owner',
-            'password' => bcrypt('12345678'),
+            'role' => 'Owner',
+            'password' => '12345678',
         ]);
 
-        User::factory(10)->create([
+        /*User::factory(10)->create([
             'role' => 'customer',
             'password' => bcrypt('12345678'),
-        ]);
+        ]);*/
 
+        User::create([
+            'name' => 'Customer',
+            'email' => 'customer@gmail.com',
+            'role'  => 'Customer',
+            'password' => '12345678',
+            'email_verified_at' => now(),
+        ]);
         
         User::create([
             'name' => 'Delivery',
@@ -41,6 +48,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Product::factory(20)->create();
-        Order::factory(25)->create();
+        //Order::factory(25)->create();
     }
 }

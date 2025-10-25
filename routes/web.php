@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
+use App\Http\Controllers\CustomerFeedbackController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\CustomerProductController;
 use App\Http\Controllers\DeliveryController;
@@ -64,6 +65,12 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::get('/', [CustomerProductController::class, 'products'])->name('customer.products');
             Route::get('/product/{id}', [CustomerProductController::class, 'product_details'])->name('customer.product.details');
         });
+
+        Route::prefix('/feedback')->group(function (){
+            Route::get('/', [CustomerFeedbackController::class, 'feedback']);
+            Route::get('/write', [CustomerFeedbackController::class, 'write_feedback']);
+            Route::post('/store', [CustomerFeedbackController::class, 'store_feedback']);
+        });
     });
     
     
@@ -115,4 +122,6 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             Route::post('/{delivery_id}/delivered-paid', [DeliveryController::class, 'order_delivered_paid'])->name('delivery.order.delivered_paid');
         });
     });
+
+
 });

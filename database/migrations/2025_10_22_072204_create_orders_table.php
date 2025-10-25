@@ -106,7 +106,7 @@ return new class extends Migration {
             $table->id();
 
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
+            $table->foreignId('order_id')->nullable()->constrained('orders')->nullOnDelete();
             
             $table->string('customer_name');
             $table->integer('rating')->unsigned()->default(5);

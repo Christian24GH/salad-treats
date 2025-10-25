@@ -43,11 +43,13 @@ export default function Feedback({ feedback = [] }){
                             <p className="font-bold text-lg">Rating: <span className="font-normal">{record?.rating} / 5</span></p>
                         </div>
                         <div className="flex items-center me-2">
+                            {/**
                             <Link href={`/owner/feedback${feedback.id}`} asChild>
                                 <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
                                     Read
                                 </Button>
                             </Link>
+                             */}
                         </div>
                     </div>
                 ))
