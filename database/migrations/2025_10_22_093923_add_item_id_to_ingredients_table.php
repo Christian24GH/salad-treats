@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /*
         Schema::table('ingredients', function (Blueprint $table) {
             //Add item_id foreign key to ingredients table
             $table->foreignId('item_id')->constrained('inventory')->cascadeOnDelete();
-        });
+        });*/
     }
 
     /**
