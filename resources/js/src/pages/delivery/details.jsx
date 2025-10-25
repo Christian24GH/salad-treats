@@ -101,18 +101,33 @@ export default function DeliveryDetails({delivery}){
                 <Separator/>
                 <div className="w-full flex justify-end p-4 gap-5">
               
-                {(delivery.status === "Pending" && delivery?.order?.payment?.payment_status !== "Completed") && (
+                {delivery.status === "Pending" && (
                 <Button
                     onClick={async () => {
                     setLoading(true);
                     try {
-                        if (delivery?.order?.payment?.payment_method === "GCash") {
-                        await axios.post(`/d/deliveries/${delivery.id}/delivered`);
-                        toast.success("Order marked as delivered!");
+                        const isGcash = delivery?.order?.payment?.payment_method === "GCash";
+                        const isPaid = delivery?.order?.payment?.payment_status === "Completed";
+
+                        let url = "";
+                        let successMessage = "";
+
+                        if (isPaid) {
+                        // Payment already completed
+                        url = `/d/deliveries/${delivery.id}/delivered`;
+                        successMessage = "Order marked as delivered!";
                         } else {
-                        await axios.post(`/d/deliveries/${delivery.id}/delivered-paid`);
-                        toast.success("Order marked as paid and delivered!");
+                        // Payment not yet completed
+                        url = isGcash
+                            ? `/d/deliveries/${delivery.id}/delivered`
+                            : `/d/deliveries/${delivery.id}/delivered-paid`;
+                        successMessage = isGcash
+                            ? "Order marked as delivered!"
+                            : "Order marked as paid and delivered!";
                         }
+
+                        await axios.post(url);
+                        toast.success(successMessage);
                         router.visit("/d/deliveries");
                     } catch (err) {
                         toast.error(err.response?.data?.message || "Failed to update order.");
@@ -127,7 +142,7 @@ export default function DeliveryDetails({delivery}){
                     <>
                         <Loader2 className="mr-3 animate-spin" /> Loading
                     </>
-                    ) : delivery?.order?.payment?.payment_method === "GCash" ? (
+                    ) : delivery?.order?.payment?.payment_method === "GCash" || delivery?.order?.payment?.payment_status === "Completed" ? (
                     "Mark as Delivered"
                     ) : (
                     "Mark as Paid and Delivered"
