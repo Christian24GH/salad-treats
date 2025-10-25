@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /*
         Schema::create('product', function (Blueprint $table) {
             $table->id();
             $table->string('product_name');
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->string('image_path')->nullable();
             $table->enum('type', ['Salad', 'Rolls', 'Platter', 'Extras']);
             $table->timestamps();
-        });
+        });*/
     }
 
     /**
