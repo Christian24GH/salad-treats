@@ -23,6 +23,13 @@ class FeedbackController extends Controller
     public function feedback_details($id)
     {
         $this->authorize('Owner');
-        return inertia('owner/feedback-details');
+        
+        $feedback = Feedback::with(['order', 'order.user'])
+            ->get();
+
+            //dd($feedback);
+        return inertia('owner/feedback-details', [
+            'feedback' => $feedback,
+        ]);
     }
 }
