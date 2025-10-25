@@ -31,7 +31,7 @@ export default function Feedback({ feedback = [] }){
                         <div className="flex items-center p-2 text-2xl font-bold mr-4">{index+1}</div>
                         <div className="flex flex-col py-2 flex-2">
                             <p className="font-bold text-lg">Customer Name: <span className="font-normal">{record?.customer_name}</span></p>
-                            <p className="font-bold text-lg">Subject: <span className="font-normal">{record?.subject}</span></p>
+                            <p className="font-bold text-lg">Subject: <span className="font-normal">{/*record?.subject*/}</span></p>
                         </div>
                         <div className="flex items-center me-2">
                             <Link href={`/owner/feedback${feedback.id}`} asChild>

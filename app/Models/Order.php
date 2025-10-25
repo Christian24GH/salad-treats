@@ -51,6 +51,14 @@ class Order extends Model
         return $this->hasOne(Delivery::class, 'order_id');
     }
 
+    /**
+     * An order may have one feedback.
+     */
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class, 'order_id');
+    }
+
     public function payment()
     {
         return $this->hasOne(Payment::class, 'order_id');

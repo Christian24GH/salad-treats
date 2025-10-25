@@ -14,7 +14,6 @@ class OrderController extends Controller
     {
         $this->authorize('Owner');
         $orders = Order::with(['user', 'orderDetails.product', 'payment'])
-            ->where('orders.status', 'Pending')
             ->get();
         return inertia('owner/orders', [
             'orders' => $orders,

@@ -98,6 +98,21 @@ return new class extends Migration {
             $table->text('remarks')->nullable();
             $table->timestamps();
         });
+
+        /**
+         * FEEDBACK TABLE
+         */
+        Schema::create('feedbacks', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
+            
+            $table->string('customer_name');
+            $table->integer('rating')->unsigned()->default(5);
+            $table->text('comment')->nullable();
+            $table->timestamps();
+        });
     }
 
     public function down(): void
@@ -108,5 +123,6 @@ return new class extends Migration {
         Schema::dropIfExists('order_details');
         Schema::dropIfExists('orders');
         Schema::dropIfExists('products');
+        Schema::dropIfExists('feedbacks');
     }
 };

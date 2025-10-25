@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Feedback;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
@@ -61,6 +62,16 @@ class OrderFactory extends Factory
                 'payment_method' => fake()->randomElement(['Cash on Delivery', 'Gcash']),
                 'payment_status' => fake()->randomElement(['Pending', 'Completed', 'Failed', 'Partial']),
             ]);
+
+            if($order->status === 'Delivered') {
+                Feedback::factory()->create([
+                    'order_id' => $order->id,
+                    'user_id' => $order->user_id,
+                    'customer_name' => $order->customer_name,
+                    'rating' => fake()->numberBetween(1, 5),
+                    'comment' => fake()->sentence(),
+                ]);
+            }
 
             $order->total_price = $total;
             $order->save();
