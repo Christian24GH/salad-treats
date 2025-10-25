@@ -36,7 +36,7 @@ export default function Orders({orders = []}){
                             <div className="flex flex-col py-2 flex-2">
                                 <p className="font-bold text-lg">Customer Name: <span className="font-normal">{record?.customer_name}</span></p>
                                 <p className="font-bold text-lg">Order Status: <span className="font-normal">{record?.status}</span></p>
-                                <p className="font-bold text-lg">Payment Status: <span className="font-normal">{`${record?.payment.payment_status} — ${record?.payment.payment_method}` }</span></p>
+                                <p className="font-bold text-lg">Payment Status: <span className="font-normal">{`${record?.payment.payment_status} — ${record?.payment.payment_method}`}</span></p>
                             </div>
                             <div className="flex items-center me-2">
                                 <Link href={`/owner/orders/${record.id}`}>

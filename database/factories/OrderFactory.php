@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\Order_Details;
 use App\Models\Product;
+use App\Models\Payment;
 use Illuminate\Support\Str;
 
 /**
@@ -18,10 +19,12 @@ class OrderFactory extends Factory
 
     public function definition(): array
     {
+        $userId = User::inRandomOrder()->value('id') ?? User::factory();
+
         return [
-            'user_id' => User::inRandomOrder()->value('id') ?? User::factory(),
+            'user_id' => $userId,
             'order_uuid' => Str::upper(Str::random(12, false, true)),
-            'customer_name' => fake()->name(),
+            'customer_name' => User::find($userId)->name ?? fake()->name(),
             'contact_number' => fake()->phoneNumber(),
             'delivery_address' => fake()->address(),
             'delivery_time' => fake()->dateTimeBetween('+1 days', '+7 days'),
@@ -42,7 +45,7 @@ class OrderFactory extends Factory
                 $total = 0;
 
                 Order_Details::factory()->create([
-                    'order_uuid' => $order->order_uuid,
+                    'order_id' => $order->id,
                     'product_id' => $product->id,
                     'quantity' => $quantity,
                     'subtotal' => $subtotal,
@@ -50,6 +53,14 @@ class OrderFactory extends Factory
 
                 $total += $subtotal;
             }
+
+            Payment::factory()->create([
+                'order_id' => $order->id,
+                'total_amount' => $total,
+                'paid_amount' => fake()->randomFloat(2, 0, $total),
+                'payment_method' => fake()->randomElement(['Cash on Delivery', 'Gcash']),
+                'payment_status' => fake()->randomElement(['Pending', 'Completed', 'Failed', 'Partial']),
+            ]);
 
             $order->total_price = $total;
             $order->save();

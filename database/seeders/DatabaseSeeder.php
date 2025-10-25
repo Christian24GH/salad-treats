@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'customer',
             'password' => bcrypt('12345678'),
         ]);
+
         User::create([
             'name' => 'Delivery',
             'email' => 'delivery@gmail.com',
@@ -37,5 +38,8 @@ class DatabaseSeeder extends Seeder
             'password' => '12345678',
             'email_verified_at' => now(),
         ]);
+
+        Product::factory(20)->create();
+        Order::factory(25)->create();
     }
 }

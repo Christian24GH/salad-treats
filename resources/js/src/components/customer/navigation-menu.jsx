@@ -18,7 +18,6 @@ export default function MenuBarNavigation() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/menu", label: "Menu" },
-    { href: "/tracker", label: "Tracker" },
     { href: "/feedback", label: "Feedback" },
   ];
 
@@ -52,7 +51,6 @@ export default function MenuBarNavigation() {
         {auth?.user && (
           <Button
             onClick={() => setCartOpen(true)}
-            variant="ghost"
             className="relative bg-transparent hover:bg-white hover:text-[var(--forest-green)] rounded-full p-2"
           >
             <ShoppingCart size={24} />
