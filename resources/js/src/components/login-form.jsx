@@ -91,6 +91,7 @@ export function LoginForm({ className, ...props }) {
 
               {/* Remember me + Forgot password */}
               <div className="flex justify-between items-center">
+                {/** 
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     id="checkbox"
@@ -103,6 +104,7 @@ export function LoginForm({ className, ...props }) {
                     Remember me
                   </FieldLabel>
                 </label>
+                */}
                 <a
                   href="/forgot-password"
                   className="text-sm text-[var(--forest-green)] hover:underline underline-offset-4"
@@ -120,7 +122,7 @@ export function LoginForm({ className, ...props }) {
                 >
                   {processing ? "Logging in..." : "Login"}
                 </Button>
-                <FieldDescription className="text-center mt-2">
+                <FieldDescription className="text-lg text-center mt-2">
                   Don&apos;t have an account?{" "}
                   <a href="/register" className="text-[var(--forest-green)] hover:underline">
                     Sign up
@@ -131,6 +133,26 @@ export function LoginForm({ className, ...props }) {
           </form>
         </CardContent>
       </Card>
+      <Field>
+        {/* Terms and Privacy */}
+        <FieldDescription className="px-6 text-center text-sm text-gray-600">
+          By clicking continue, you agree to our{" "}
+          <a
+            href="#"
+            className="text-[var(--forest-green)] hover:underline underline-offset-4"
+          >
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a
+            href="#"
+            className="text-[var(--forest-green)] hover:underline underline-offset-4"
+          >
+            Privacy Policy
+          </a>
+          .
+        </FieldDescription>
+      </Field>
     </div>
   );
 }

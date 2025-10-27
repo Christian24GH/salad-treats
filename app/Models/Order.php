@@ -25,6 +25,7 @@ class Order extends Model
         'delivery_instructions',
         'total_price',
         'status',
+        'cancellation_reason',
     ];
 
     /**

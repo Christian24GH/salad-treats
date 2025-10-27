@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\CustomerFeedbackController;
+use App\Http\Controllers\CustomerManagementController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\CustomerProductController;
 use App\Http\Controllers\DeliveryController;
@@ -53,6 +54,7 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
     Route::prefix('/customer')->group(function () {
         Route::prefix('/orders')->group(function () {
             Route::get('/', [CustomerOrderController::class, 'orders'])->name('customer.orders');
+            Route::get('/cancelled', [CustomerOrderController::class, 'cancelled_orders'])->name('customer.orders.cancelled');
             Route::get('/create', [CustomerOrderController::class, 'create_order'])->name('customer.order.create');
             Route::post('/place', [CustomerOrderController::class, 'place_order'])->name('customer.order.place');
             Route::post('/cancel/{order_uuid}', [CustomerOrderController::class, 'cancel_order'])->name('customer.order.cancel');
@@ -112,6 +114,11 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
             // Displays details of a single menu item by UUID
             Route::get('/{product_uuid}', [MenuController::class, 'show'])->name('owner.menu.show');
         });
+
+        Route::prefix('/customer-management')->group(function(){
+            Route::get('/', [CustomerManagementController::class, 'customers'])->name('owner.customers');
+            Route::get('/{customer_id}', [CustomerManagementController::class, 'customer_details'])->name('owner.customer.details');
+        });
     });
 
     Route::prefix('/d')->group(function(){
@@ -126,6 +133,6 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
     Route::middleware(['auth'])->group(function () {
         Route::get('/customer/account', [UserController::class, 'customerAccount'])->name('customer.account');
         Route::get('/owner/account', [UserController::class, 'ownerAccount'])->name('owner.account');
+        Route::get('/account', [UserController::class, 'account'])->name('account');
     });
-
 });

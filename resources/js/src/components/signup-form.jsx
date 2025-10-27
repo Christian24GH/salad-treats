@@ -172,7 +172,7 @@ export function SignupForm({ className, ...props }) {
                 >
                   {processing ? "Creating Account..." : "Create Account"}
                 </Button>
-                <FieldDescription className="text-center mt-2">
+                <FieldDescription className="text-lg text-center mt-2">
                   Already have an account?{" "}
                   <a
                     href="/login"
@@ -186,25 +186,27 @@ export function SignupForm({ className, ...props }) {
           </form>
         </CardContent>
       </Card>
-
-      {/* Terms and Privacy */}
-      <FieldDescription className="px-6 text-center text-sm text-gray-600">
-        By clicking continue, you agree to our{" "}
-        <a
-          href="#"
-          className="text-[var(--forest-green)] hover:underline underline-offset-4"
-        >
-          Terms of Service
-        </a>{" "}
-        and{" "}
-        <a
-          href="#"
-          className="text-[var(--forest-green)] hover:underline underline-offset-4"
-        >
-          Privacy Policy
-        </a>
-        .
-      </FieldDescription>
+      <Field>
+        {/* Terms and Privacy */}
+        <FieldDescription className="px-6 text-center text-sm text-gray-600">
+          By clicking continue, you agree to our{" "}
+          <a
+            href="#"
+            className="text-[var(--forest-green)] hover:underline underline-offset-4"
+          >
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a
+            href="#"
+            className="text-[var(--forest-green)] hover:underline underline-offset-4"
+          >
+            Privacy Policy
+          </a>
+          .
+        </FieldDescription>
+      </Field>
+     
     </div>
   );
 }

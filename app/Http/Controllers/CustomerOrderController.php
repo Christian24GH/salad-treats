@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -29,11 +30,26 @@ class CustomerOrderController extends Controller
         ]);
     }
 
+    public function cancelled_orders(){
+        $this->authorize('Customer');
+        $user = Auth::id();
+        $orders = Order::where('user_id', $user)
+            ->withTrashed()
+            ->with('orderDetails.product')
+            ->with('payment')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return inertia('customer/orders-deleted', [
+            'orders' => $orders
+        ]);
+    }
+
     public function order_details($order_id){
         $this->authorize('Customer');
         $user = Auth::id();
         $order = Order::where('user_id', $user)
             ->where('id', $order_id)
+            ->withTrashed()
             ->with('orderDetails.product')
             ->with('payment')
             ->orderBy('created_at', 'desc')
@@ -46,8 +62,12 @@ class CustomerOrderController extends Controller
     public function create_order(){
         $this->authorize('Customer');
         $products = Product::get();
+        $user = User::where('id', Auth::id())
+            ->with('address')
+            ->first();
         return inertia('customer/create-order', [
-            'products' => $products
+            'products' => $products,
+            'user'  => $user,
         ]);
     }
 
@@ -298,10 +318,12 @@ class CustomerOrderController extends Controller
     }
 
 
-    public function cancel_order($order_uuid)
+    public function cancel_order($order_uuid, Request $request)
     {
         $this->authorize('Customer');
-
+        $request->validate([
+            'reason' => ['required', 'min:5'],
+        ]);
         $order = Order::where('order_uuid', $order_uuid)
             ->where('user_id', Auth::id())
             ->firstOrFail();
@@ -313,6 +335,7 @@ class CustomerOrderController extends Controller
         }
 
         $order->status = 'Cancelled';
+        $order->cancellation_reason = $request['reason'];
         $order->save();
         $order->delete();
         return response()->json([

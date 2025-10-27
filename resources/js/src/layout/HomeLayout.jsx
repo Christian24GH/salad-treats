@@ -1,6 +1,9 @@
 import { useEffect} from "react";
 import axios from "axios";
-import MenuBarNavigation from "@/components/admin/navigation-menu";
+import AdminMenuBar from "@/components/admin/navigation-menu";
+import CustomerMenuBar from "@/components/customer/navigation-menu";
+import DeliveryMenuBar from "@/components/delivery/navigation-menu";
+import DefaultMenuBar from "@/components/default/navigation-menu";
 import { usePage } from '@inertiajs/react'
 import { Toaster } from "sonner";
 
@@ -31,12 +34,22 @@ export default function HomeLayout({ children }){
                     </div>
 
                     <div className="hidden md:flex">
-                        <MenuBarNavigation />
+                        {
+                            auth.user.role === "Customer" ? <CustomerMenuBar /> :
+                            auth.user.role === "Owner"    ? <AdminMenuBar /> :
+                            auth.user.role === "Delivery"    ? <DeliveryMenuBar /> :
+                            <DefaultMenuBar /> //fallback
+                        }
                     </div>
 
-                    {/* Mobile menu button */}
+                    
                     <div className="md:hidden ml-auto">
-                        <MenuBarNavigation mobile />
+                        {/* Mobile menu button */
+                            auth.user.role === "Customer" ? <CustomerMenuBar mobile/> :
+                            auth.user.role === "Owner"    ? <AdminMenuBar mobile/> :
+                            auth.user.role === "Delivery"    ? <DeliveryMenuBar mobile/> :
+                            <DefaultMenuBar mobile/> //fallback
+                        }
                     </div>
                 </header>
                 <div className="my-[50px] md:my-[60px] mx-10">

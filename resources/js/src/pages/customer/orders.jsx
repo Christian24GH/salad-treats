@@ -1,5 +1,5 @@
 import HomeLayout from "@/layout/HomeLayout"
-import { FileQuestionIcon } from "lucide-react"
+import { FileQuestionIcon, PlusCircle, XCircle } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import {
   Empty,
@@ -22,15 +22,40 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
+import {
+    Field,
+    FieldDescription,
+    FieldError,
+    FieldLabel
+} from "@/components/ui/field"
+
+import { Textarea } from "@/components/ui/textarea"
 
 import { Link, router } from "@inertiajs/react"
 import { Button } from "@/components/ui/button"
 import axios from "../../../bootstrap"
 import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+
+
 export default function Orders({orders = []}){
     console.log(orders)
-    const handleCancel = async (uuid) => {
-        await axios.post(`/customer/orders/cancel/${uuid}`)
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        reset,
+    } = useForm()
+
+    const handleCancel = async (data) => {
+        if(!data.order_uuid){
+            toast.warning("Missing order uuid, please reload the page");
+            return
+        }
+
+        await axios.post(`/customer/orders/cancel/${data.order_uuid}`, {
+                reason: data.cancellation_reason
+            })
             .then((response)=>{
                 if(response.status == 201){
                     toast.success("You have cancelled an order")
@@ -49,10 +74,21 @@ export default function Orders({orders = []}){
         <>
             <div className="py-5 text-3xl lato-bold-italic text-[var(--forest-green)] flex justify-between items-center">
                 Orders
-
-                <Link href="/customer/menu">
-                    <Button className={"bg-[var(--forest-green)]"}>Add Order</Button>
-                </Link>
+                
+                <div className="flex gap-3">
+                    <Link href="/customer/menu">
+                        <Button className={"bg-[var(--forest-green)] flex gap-2 text-lg p-1"}>
+                            <PlusCircle className="!size-6"/>
+                            Add Order
+                        </Button>
+                    </Link>
+                    <Link href="/customer/orders/cancelled">
+                        <Button className={"bg-[var(--forest-green)] flex gap-2 text-lg p-1"}>
+                            <XCircle className="!size-6"/>
+                            Cancelled Orders
+                        </Button>
+                    </Link>
+                </div>
             </div>
             <Separator/>
             {orders?.length == 0 ? (
@@ -80,9 +116,9 @@ export default function Orders({orders = []}){
                             <p className="font-bold text-lg">Order ID: <span className="font-normal">{record?.order_uuid}</span></p>
                             <p className="font-bold text-lg">Status: <span className="font-normal">{record?.status}</span></p>
                         </div>
-                        <div className="flex items-center me-2 gap-2">
+                        <div className="flex flex-col items-center justify-center me-2 gap-2">
                             <Link href={`/customer/orders/${record.id}`}>
-                                <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic">
+                                <Button className="bg-[var(--forest-green)] text-lg lato-regular-italic max-w-40">
                                     View Full Details
                                 </Button>
                             </Link>
@@ -91,27 +127,41 @@ export default function Orders({orders = []}){
                                     <AlertDialogTrigger asChild>
                                         <Button 
                                             variant={"destructive"}
-                                            className="text-lg lato-regular-italic">
-                                            Cancel
+                                            className="text-lg lato-regular-italic w-full max-w-40">
+                                            Cancel Order
                                         </Button>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
+                                        <form onSubmit={handleSubmit(handleCancel)}>
+                                        <input {...register('order_uuid', {required:true})} type="hidden" value={record?.order_uuid} />
                                         <AlertDialogHeader>
-                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone.
-                                        </AlertDialogDescription>
+                                            <AlertDialogTitle>Cancel my order</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone.
+                                            </AlertDialogDescription>
                                         </AlertDialogHeader>
+                                        
+                                        <Field className="my-5">
+                                            <FieldLabel>Reason for cancellation</FieldLabel>
+                                            <Textarea
+                                                className={"!text-lg !min-h-16"}
+                                                placeholder="Type reason here"
+                                                {...register("cancellation_reason", {
+                                                    required: "You need to provide your reason here",
+                                                    minLength: {
+                                                        value: 5,
+                                                        message: "Must be more than 5 characters",
+                                                    },
+                                                })}/>
+                                            {errors.cancellation_reason && <FieldError>{errors.cancellation_reason.message}</FieldError>}
+                                        </Field>
                                         <AlertDialogFooter>
                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction variant={"destructive"} className={"bg-red-500"}
-                                            onClick={()=>{
-                                                handleCancel(record.order_uuid)
-                                            }}
-                                        >
+                                        <Button type="Submit" variant={"destructive"} className={"bg-red-500"}>
                                             Cancel Order
-                                        </AlertDialogAction>
+                                        </Button>
                                         </AlertDialogFooter>
+                                        </form>
                                     </AlertDialogContent>
                                 </AlertDialog>
                             )}

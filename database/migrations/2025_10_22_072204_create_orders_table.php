@@ -47,6 +47,7 @@ return new class extends Migration {
                 'Delivered'
             ])->default('Pending')->index();
 
+            $table->text('cancellation_reason')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

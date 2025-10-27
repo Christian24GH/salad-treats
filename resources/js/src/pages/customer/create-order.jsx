@@ -33,8 +33,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export default function CreateOrder() {
+export default function CreateOrder({user}) {
     const { auth } = usePage().props
+    console.log( user )
     //console.log(auth)
     const { cart, computeItemTotal, computeCartTotal, setCartOpen, clearCart } = useCart()
     const [loading, setLoading] = useState(false)
@@ -208,9 +209,9 @@ export default function CreateOrder() {
 
            
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogContent className="sm:max-w-[500px] max-h-screen overflow-auto">
+                <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-auto">
                     <DialogHeader>
-                        <DialogTitle>Enter Delivery Details</DialogTitle>
+                        <DialogTitle className="text-lg">Enter Delivery Details</DialogTitle>
                     </DialogHeader>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -220,8 +221,8 @@ export default function CreateOrder() {
                                 <Field>
                                     <FieldLabel className="text-lg">Customer Name</FieldLabel>
                                     <Input
-                                        defaultValues={auth?.user?.name}
-                                        className={"text-lg !h-16"}
+                                        defaultValues={user?.name}
+                                        className={"!text-lg !h-16"}
                                         placeholder="e.g. John Doe"
                                         {...register("customer_name", {
                                             required: "Customer name is required",
@@ -266,7 +267,8 @@ export default function CreateOrder() {
                                     <FieldLabel className="text-lg">Contact Number</FieldLabel>
                                     <Input
                                         placeholder="e.g. 09123456789"
-                                        className={"text-lg !h-16"}
+                                        defaultValues={user?.phone_number}
+                                        className={"!text-lg !h-16"}
                                         {...register("contact_number", {
                                             required: "Contact number is required",
                                             pattern: {
@@ -287,7 +289,8 @@ export default function CreateOrder() {
                                 <Field>
                                     <FieldLabel className="text-lg">Delivery Address</FieldLabel>
                                     <Textarea
-                                        className={"text-lg !h-16"}
+                                        className={"!text-lg !h-16"}
+                                        defaultValues={user?.address}
                                         placeholder="Enter your full address"
                                         {...register("delivery_address", {
                                             required: "Delivery address is required",
@@ -304,8 +307,9 @@ export default function CreateOrder() {
                                 <Field>
                                     <FieldLabel className="text-lg">Preferred Delivery Time</FieldLabel>
                                     <Input
-                                        className={"text-lg !h-16"}
+                                        className={"!text-lg !h-16"}
                                         type="datetime-local"
+                                        min={new Date().toISOString().slice(0, 16)}
                                         {...register("delivery_time", {
                                             required: "Please select a delivery time",
                                         })}
@@ -321,7 +325,7 @@ export default function CreateOrder() {
                                 <Field>
                                     <FieldLabel className="text-lg">Delivery Instructions</FieldLabel>
                                     <Textarea
-                                        className={"text-lg !min-h-16"}
+                                        className={"!text-lg !min-h-16"}
                                         placeholder="Optional (e.g., Leave at front gate)"
                                         {...register("delivery_instructions")}
                                     />

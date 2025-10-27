@@ -7,7 +7,20 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class UserController extends Controller
-{
+{   
+    public function deliveryaccount()
+    {
+        $user = Auth::user();
+
+        if ($user->role === 'owner') {
+            return redirect()->route('owner.account');
+        }
+
+        return Inertia::render('customer/Account', [
+            'user' => $user,
+        ]);
+    }
+
     public function customerAccount()
     {
         $user = Auth::user();

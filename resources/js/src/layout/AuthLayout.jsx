@@ -6,6 +6,8 @@ const FormLayout = ({children}) => {
     useEffect(() => {
         axios.get("/sanctum/csrf-cookie");
     }, []);
+
+    
     return (
         <div className="w-full h-full">
             <header className="h-[50px] md:h-[60px] w-full bg-[var(--forest-green)] flex items-center px-4 fixed top-0 z-50">
@@ -24,6 +26,10 @@ const FormLayout = ({children}) => {
             </header>
             <div className="my-[50px] md:my-[60px]">
                 {children}
+            </div>
+
+            <div className="fixed inset-0 w-full h-full -z-50">
+                <img src="/assets/bg.jfif" alt="" className="w-full h-full object-cover"/>
             </div>
         </div>
     )

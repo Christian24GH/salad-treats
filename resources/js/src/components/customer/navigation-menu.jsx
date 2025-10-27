@@ -19,6 +19,7 @@ import { useCart } from "@/context/CartContext";
 
 export default function MenuBarNavigation({ mobile = false }) {
   const [open, setOpen] = useState(false);
+  const { setCartOpen } = useCart();
   const { auth } = usePage().props;
 
   const handleLogout = () => {
@@ -27,12 +28,10 @@ export default function MenuBarNavigation({ mobile = false }) {
     });
   };
 
-  const owner_nav = [
-    { href: "/owner/orders", label: "Orders" },
-    { href: "/owner/tracker", label: "Tracker" },
-    { href: "/owner/menu", label: "Menu" },
-    { href: "/owner/feedback", label: "Feedback" },
-    { href: "/owner/customer-management", label: "Customer Management" },
+  const customer_nav = [
+    { href: "/customer/orders", label: "Orders" },
+    { href: "/customer/menu", label: "Menu" },
+    { href: "/customer/feedback", label: "Feedback" },
   ];
 
   if (mobile) {
@@ -47,7 +46,7 @@ export default function MenuBarNavigation({ mobile = false }) {
 
         {open && (
           <div className="absolute right-0 mt-2 bg-[var(--forest-green)] shadow-lg rounded-lg py-2 w-44 z-50">
-            {owner_nav.map((link) => (
+            {customer_nav.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -59,12 +58,24 @@ export default function MenuBarNavigation({ mobile = false }) {
             ))}
 
             <Link
-                href="/owner/account"
+                href="/customer/account"
                 onClick={() => setOpen(false)}
                 className="block text-white text-base lato-regular-italic px-4 py-2 hover:bg-green-700 transition"
               >
               {auth.user.name}
-            </Link>      
+            </Link>
+            <button
+              onClick={() => {
+                setCartOpen(true);
+                setOpen(false);
+              }}
+              className="flex items-center gap-2 text-white text-base lato-regular-italic px-4 py-2 hover:bg-green-700 transition w-full text-left"
+            >
+              <ShoppingCart size={18} />
+              Cart
+            </button>
+            
+
             <div className="border-t border-green-700 my-1" />
 
             <button
@@ -86,7 +97,7 @@ export default function MenuBarNavigation({ mobile = false }) {
   return (
     <NavigationMenu>
       <NavigationMenuList className="flex items-center space-x-2">
-        {owner_nav.map((link) => (
+        {customer_nav.map((link) => (
           <NavigationMenuItem key={link.href}>
             <NavigationMenuLink asChild>
               <Link
@@ -106,10 +117,8 @@ export default function MenuBarNavigation({ mobile = false }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem asChild>
-                <Link
-                  href="/owner/account"
-                >
-                 {auth.user.name}
+                <Link href={"/customer/account"}>
+                  {auth.user.name}
                 </Link>
               </DropdownMenuItem>
 
@@ -126,6 +135,16 @@ export default function MenuBarNavigation({ mobile = false }) {
           </DropdownMenu>
         </NavigationMenuItem>
 
+        {/* Cart button */}
+        <NavigationMenuItem>
+          <Button
+            onClick={() => setCartOpen(true)}
+            variant="ghost"
+            className="bg-[var(--soft-lime)] text-white hover:bg-white hover:text-[var(--forest-green)] text-lg lato-regular-italic flex items-center rounded-full aspect-square size-fit justify-center"
+          >
+            <ShoppingCart className="mx-auto -translate-x-[5%] !size-8" />
+          </Button>
+        </NavigationMenuItem>        
       </NavigationMenuList>
     </NavigationMenu>
   );
