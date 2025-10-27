@@ -11,17 +11,19 @@ class CustomerManagementController extends Controller
     {
         $this->authorize('Owner');
         $customers = User::where('role', 'Customer')
-            ->withCount(['orders as delivered_orders_count' => function ($query) {
-                $query->where('status', '=', 'Delivered');
-            }])
-            ->withCount(['orders as cancelled_orders_count' => function ($query) {
-                $query->where('status', '=', 'Cancelled');
-            }])
-            ->withCount(['orders as paid_orders_count' => function ($query) {
-                $query->whereHas('payment', function ($query) {
-                    $query->where('payment_status', '=', 'Completed');
-                });
-            }])
+            ->withCount([
+                'orders as delivered_orders_count' => function ($query) {
+                    $query->where('status', '=', 'Delivered');
+                }, 
+                'orders as cancelled_orders_count' => function ($query) {
+                    $query->withTrashed()->where('status', '=', 'Cancelled');
+                }, 
+                'orders as paid_orders_count' => function ($query) {
+                    $query->whereHas('payment', function ($query) {
+                        $query->where('payment_status', '=', 'Completed');
+                    });
+                }
+            ])
             ->get();
         return inertia('owner/customers', [
             'customers' => $customers

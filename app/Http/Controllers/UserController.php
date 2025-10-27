@@ -12,11 +12,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'owner') {
-            return redirect()->route('owner.account');
-        }
+        $this->authorize('Delivery');
 
-        return Inertia::render('customer/Account', [
+        return Inertia::render('customer/account', [
             'user' => $user,
         ]);
     }
@@ -24,22 +22,19 @@ class UserController extends Controller
     public function customerAccount()
     {
         $user = Auth::user();
+        $this->authorize('Customer');
 
-        if ($user->role === 'owner') {
-            return redirect()->route('owner.account');
-        }
-
-        return Inertia::render('customer/Account', [
-            'user' => $user,
+        return Inertia::render('customer/account', [
+            'customerAccount' => $user,
         ]);
     }
 
     public function ownerAccount()
     {
         $user = Auth::user();
-
-        return Inertia::render('owner/Account', [
-            'user' => $user,
+        $this->authorize('Owner');
+        return Inertia::render('owner/account', [
+            'customerAccount' => $user,
         ]);
     }
 }
