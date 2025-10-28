@@ -118,6 +118,8 @@ Route::middleware([EnsureAuthenticated::class, 'verified'])->group(function(){
         Route::prefix('/customer-management')->group(function(){
             Route::get('/', [CustomerManagementController::class, 'customers'])->name('owner.customers');
             Route::get('/{customer_id}', [CustomerManagementController::class, 'customer_details'])->name('owner.customer.details');
+            Route::post('/block-customer', [CustomerManagementController::class, 'block_customer']);
+            Route::post('/unblock-customer', [CustomerManagementController::class, 'unblock_customer']);
         });
     });
 
